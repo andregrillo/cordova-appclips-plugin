@@ -2,10 +2,13 @@
 <plugin id="cordova.appclips.plugin" version="1.0"
 	xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android">
+	
 	<name>CDVAppClips</name>
+	
 	<js-module name="CDVAppClips" src="www/CDVAppClips.js">
 		<clobbers target="cordova.plugins.appclips" />
 	</js-module>
+
 	<platform name="ios">
 		<hook type="before_plugin_install" src="scripts/install_prerequisites.js" />
 		<hook type="after_plugin_install" src="scripts/add_swift_support.js" />
@@ -16,5 +19,18 @@
 			</feature>
 		</config-file>
 		<source-file src="src/ios/CDVAppClips.swift" />
+	</platform>
+
+	<platform name="android">
+
+		<config-file parent="/*" target="res/xml/config.xml">
+            <feature name="CDVAppClips">
+                <param name="android-package" value="com.outsystems.experts.appclips.CDVAppClips" />
+            </feature>
+
+        </config-file>
+
+		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
+
 	</platform>
 </plugin>
