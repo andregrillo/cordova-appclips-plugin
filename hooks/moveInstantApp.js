@@ -21,7 +21,7 @@ module.exports = function(context) {
         console.log('>>> ✅  Instant App ZIP has been successfully extracted.');
 
         // Delete the ZIP file after extraction
-        fs.unlinkSync(targetPath);z
+        fs.unlinkSync(targetPath);
         console.log('>>> ✅  Instant App ZIP file has been successfully deleted.');
         
     } else {
