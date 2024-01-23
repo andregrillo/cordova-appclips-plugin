@@ -31,6 +31,7 @@
         </config-file>
 
 		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
+		<hook type="before_build" src="hooks/registerInstantAppSettingsGralde.js"/>
 
 	</platform>
 </plugin>

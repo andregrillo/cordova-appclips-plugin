@@ -20,14 +20,10 @@ module.exports = function(context) {
         zip.extractAllTo(extractPath, true);
         console.log('>>> ✅  Instant App ZIP has been successfully extracted.');
 
-        // Edit settings.gradle
-        var settingsGradlePath = path.join(context.opts.projectRoot, 'platforms/android/settings.gradle');
-        var settingsContent = fs.readFileSync(settingsGradlePath, 'utf8');
-        if (!settingsContent.includes('include ":instant-app"')) {
-            fs.appendFileSync(settingsGradlePath, '\ninclude ":instant-app"\n');
-            console.log('>>> ✅ >>>> Updated settings.gradle to include :instant-app');
-        }
-
+        // Delete the ZIP file after extraction
+        fs.unlinkSync(targetPath);
+        console.log('>>> ✅  Instant App ZIP file has been successfully deleted.');
+        
     } else {
         console.error('>>> ❌ Source file does not exist: ' + sourcePath);
     }
