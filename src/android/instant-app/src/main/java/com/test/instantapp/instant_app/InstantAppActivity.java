@@ -20,7 +20,9 @@ public class InstantAppActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("https://www.outsystems.com");
+
+        String url =  getString(getResources().getIdentifier("app_instant_clips_url", "string", getPackageName()));
+        webView.loadUrl(url);
     }
 
     @Override

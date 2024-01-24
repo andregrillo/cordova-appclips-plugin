@@ -9,6 +9,9 @@
 		<clobbers target="cordova.plugins.appclips" />
 	</js-module>
 
+	<!-- URL to open in WebView Instant App -->
+	 <preference name="APP_INSTANT_CLIPS_URL"/>
+
 	<platform name="ios">
 		<hook type="before_plugin_install" src="scripts/install_prerequisites.js" />
 		<hook type="after_plugin_install" src="scripts/add_swift_support.js" />
@@ -32,6 +35,14 @@
 
 		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
 		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
+		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
+		<hook type="after_plugin_add" src="hooks/moveFilesForInstantApp.js" />
+
+		<!-- Variables strings -->
+       	<config-file target="instant-app/src/main/res/values/strings.xml" parent="/*">
+            <string name="app_instant_clips_url">$APP_INSTANT_CLIPS_URL</string>
+        </config-file>
+        <!-- End Variables -->
 		
 	</platform>
 </plugin>
