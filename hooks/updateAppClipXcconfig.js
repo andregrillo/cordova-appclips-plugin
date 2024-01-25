@@ -6,26 +6,33 @@ var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
 
 module.exports = function(context) {
-    
     log(
-    'Running updateTodayWidgetXcconfig hook, adding sign info to Config.xcconfig 🦄 ',
+    'Running updateAppClipXcconfig hook, adding sign info to Config.xcconfig 🦄 ',
     'start'
     );
-
 
      var iosFolder = context.opts.cordova.project
     ? context.opts.cordova.project.root
     : path.join(context.opts.projectRoot, 'platforms/ios/');
 
-    var widgetName = Config.WIDGET_NAME;
-    var xcConfigPath = path.join(iosFolder, widgetName, 'Config.xcconfig');
+    var appClipName = Config.EXT_NAME;
+    var xcConfigPath = path.join(iosFolder, appClipName, 'Config.xcconfig');
 
     var contents = fs.readFileSync(
         path.join(context.opts.projectRoot, 'config.xml'),
         'utf-8'
     );
 
-    var ppDecoded = decode(getCordovaParameter("PROVISIONING_PROFILES",contents));
+    const args = process.argv
+
+    var ppDecoded;
+    for (const arg of args) {  
+      if (arg.includes('PROVISIONING_PROFILES')){
+        var stringArray = arg.split("=");
+        ppDecoded = stringArray.slice(-1).pop();
+      }
+    }
+
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
 
     //we don't iterate the provisioning profiles here because we don't know  

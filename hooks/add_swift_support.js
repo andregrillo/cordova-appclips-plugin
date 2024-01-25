@@ -23,7 +23,6 @@ const semver = require('semver');
 const glob = require('glob');
 
 module.exports = context => {
-  console.log("👉 Adding Swift support!");
   const projectRoot = context.opts.projectRoot;
 
   // This script has to be executed depending on the command line arguments, not
@@ -89,7 +88,6 @@ module.exports = context => {
 
       const appClipSchemeName = "CDVAppClips";
       for (configName in buildConfigs) {
-        console.log("👉 configName: " + configName);
         if (!COMMENT_KEY.test(configName)) {
           buildConfig = buildConfigs[configName];
 
