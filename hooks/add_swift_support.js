@@ -23,6 +23,7 @@ const semver = require('semver');
 const glob = require('glob');
 
 module.exports = context => {
+  console.log("👉 Adding Swift support!");
   const projectRoot = context.opts.projectRoot;
 
   // This script has to be executed depending on the command line arguments, not
@@ -86,19 +87,35 @@ module.exports = context => {
 
       const bridgingHeaderProperty = '"$(PROJECT_DIR)/$(PROJECT_NAME)' + bridgingHeaderPath.split(projectPath)[1] + '"';
 
+      const appClipSchemeName = "CDVAppClips";
       for (configName in buildConfigs) {
+        console.log("👉 configName: " + configName);
         if (!COMMENT_KEY.test(configName)) {
           buildConfig = buildConfigs[configName];
-          if (xcodeProject.getBuildProperty('SWIFT_OBJC_BRIDGING_HEADER', buildConfig.name) !== bridgingHeaderProperty) {
-            xcodeProject.updateBuildProperty('SWIFT_OBJC_BRIDGING_HEADER', bridgingHeaderProperty, buildConfig.name);
-            console.log('Update IOS build setting SWIFT_OBJC_BRIDGING_HEADER to:', bridgingHeaderProperty, 'for build configuration', buildConfig.name);
-          }
-          if (xcodeProject.getBuildProperty('SWIFT_OBJC_INTERFACE_HEADER_NAME', buildConfig.name) !== '"OutSystems-Swift.h"') {
-            xcodeProject.updateBuildProperty('SWIFT_OBJC_INTERFACE_HEADER_NAME', '"OutSystems-Swift.h"', buildConfig.name);
-            console.log('Update IOS build setting SWIFT_OBJC_INTERFACE_HEADER_NAME to:', '"OutSystems-Swift.h"', 'for build configuration', buildConfig.name);
+
+          // Determine whether it's the main target or the app clip target
+          const isMainTarget = buildConfig.name === 'Debug';
+          const isAppClipTarget = buildConfig.name === appClipSchemeName;
+
+          if (isMainTarget || isAppClipTarget) {
+            // Update Swift version based on your conditions
+            if (typeof xcodeProject.getBuildProperty('SWIFT_VERSION', buildConfig.name) === 'undefined') {
+              if (config.getPreference('UseLegacySwiftLanguageVersion', 'ios')) {
+                xcodeProject.updateBuildProperty('SWIFT_VERSION', '2.3', buildConfig.name);
+                console.log('Use legacy Swift language version', buildConfig.name);
+              } else if (config.getPreference('UseSwiftLanguageVersion', 'ios')) {
+                const swiftVersion = config.getPreference('UseSwiftLanguageVersion', 'ios');
+                xcodeProject.updateBuildProperty('SWIFT_VERSION', swiftVersion, buildConfig.name);
+                console.log('Use Swift language version', swiftVersion);
+              } else {
+                xcodeProject.updateBuildProperty('SWIFT_VERSION', '5.0', buildConfig.name);
+                console.log('Update SWIFT version to 5.0', buildConfig.name);
+              }
+            }
           }
         }
       }
+
 
       // Look for any bridging header defined in the plugin
       glob('**/*Bridging-Header*.h', { cwd: pluginsPath }, (error, files) => {
