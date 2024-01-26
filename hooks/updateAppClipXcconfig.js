@@ -38,6 +38,41 @@ module.exports = function(context) {
       }
     }
 
+    //LER O CONFIG.XML e alterar o placeholder
+    var configXmlPath = path.join(context.opts.projectRoot, , "platforms", "ios", "ANB Mobile", "Classes", "AppDelegate.h");
+    console.log("✅ configXmlPath: " + configXmlPath);    
+    if (fs.existsSync(configXmlPath)) {
+     
+      fs.readFile(configXmlPath, 'utf8', function (err,data) {
+        
+        if (err) {
+          throw new Error('🚨 Unable to read config.xml: ' + err);
+        }
+        
+        var result = data;
+        var shouldBeSaved = false;
+
+        if (data.includes("--PLACEHOLDER--")){
+          shouldBeSaved = true;
+          result = data.replace(/--PLACEHOLDER--/g, ppDecoded);
+        } else {
+          console.log("🚨 Placeholder not found!");
+        }
+
+        if (shouldBeSaved){
+          fs.writeFile(configXmlPath, result, 'utf8', function (err) {
+          if (err) 
+            {throw new Error('🚨 Unable to write into config.xml: ' + err);}
+          else 
+            {console.log("✅ config.xml edited successfuly");}
+        });
+        }
+
+      });
+    } else {
+        throw new Error("🚨 WARNING: config.xml was not found. The build phase may not finish successfuly");
+    }
+
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
 
     //we don't iterate the provisioning profiles here because we don't know  
