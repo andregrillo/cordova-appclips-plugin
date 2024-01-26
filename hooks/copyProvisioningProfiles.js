@@ -94,7 +94,7 @@ module.exports = function(context) {
     
     var targetFolder = path.join(
       require("os").homedir(),
-      'Library/MobileDevice/Provisioning Profiles'
+      'Library/MobileDevice/Provisioning\ Profiles'
     )
     console.log("target folder", targetFolder);
     if (!fs.existsSync(targetFolder)){
