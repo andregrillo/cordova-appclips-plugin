@@ -28,6 +28,11 @@
 		<!--<hook type="after_plugin_install" src="scripts/iOS_add_target.js" />
 		<hook type="after_plugin_install" src="scripts/fixAppEntitlements.js" />
 		<hook type="after_plugin_install" src="scripts/copyExtensionFolderToIosProjectFolder.js" />-->
+
+		<config-file target="config.xml" parent="/*">
+	        <preference name="PROVISIONING_PROFILES" value="${PROVISIONING_PROFILES}" />
+	    </config-file>
+
 		<config-file parent="/*" target="config.xml">
 			<feature name="CDVAppClips">
 				<param name="ios-package" value="CDVAppClips" />

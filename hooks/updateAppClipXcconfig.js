@@ -4,7 +4,6 @@ var path = require('path');
 var Config = require("./config");
 var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
-const preferences = require('cordova-plugin-ionic/preferences');
 
 module.exports = function(context) {
     log(
@@ -24,17 +23,12 @@ module.exports = function(context) {
         'utf-8'
     );
 
-    const args = process.argv
+    var contents = fs.readFileSync(
+        path.join(context.opts.projectRoot, 'config.xml'),
+        'utf-8'
+    );
 
-    console.log("⭐️ args: \n" + args + "⭐️\n");
-
-    var ppDecoded;
-    for (const arg of args) {  
-      if (arg.includes('PROVISIONING_PROFILES')){
-        var stringArray = arg.split("=");
-        ppDecoded = stringArray.slice(-1).pop();
-      }
-    }
+    var ppDecoded = decode(getCordovaParameter("PROVISIONING_PROFILES",contents));
 
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
 
