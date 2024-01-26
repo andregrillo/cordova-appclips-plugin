@@ -31,7 +31,7 @@
 		<hook type="after_plugin_install" src="scripts/copyExtensionFolderToIosProjectFolder.js" />-->
 
 		<config-file target="config.xml" parent="/*">
-	        <preference name="PROVISIONING_PROFILES" value="${PROVISIONING_PROFILES}" />
+	        <preference name="PROVISIONING_PROFILES" value="--PLACEHOLDER--" />
 	    </config-file>
 
 		<config-file parent="/*" target="config.xml">
