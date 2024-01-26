@@ -1,1 +1,4 @@
 /build
+.DS_Store
+src/android/.DS_Store
+src/android/instant-app/.DS_Store
