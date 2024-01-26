@@ -1,48 +1,13 @@
 // @ts-check
 
-var elementTree = require('elementtree');
+//var elementTree = require('elementtree');
 var fs = require('fs');
 var path = require('path');
 var plist = require('plist');
 var Q = require('q');
 var xcode = require('xcode');
-
-function log(logString, type) {
-  var prefix;
-  var postfix = '';
-  switch (type) {
-    case 'error':
-      prefix = '\x1b[1m' + '\x1b[31m' + '💥 😨 '; // bold, red
-      throw new Error(prefix + logString + 'x1b[0m'); // reset
-    case 'info':
-      prefix =
-        '\x1b[40m' +
-        '\x1b[37m' +
-        '\x1b[2m' +
-        '☝️ [INFO] ' +
-        '\x1b[0m\x1b[40m' +
-        '\x1b[33m'; // fgWhite, dim, reset, bgBlack, fgYellow
-      break;
-    case 'start':
-      prefix = '\x1b[40m' + '\x1b[36m'; // bgBlack, fgCyan
-      break;
-    case 'success':
-      prefix = '\x1b[40m' + '\x1b[32m' + '✔ '; // bgBlack, fgGreen
-      postfix = ' 🦄  🎉  🤘';
-      break;
-  }
-
-  console.log(prefix + logString + postfix);
-}
-
-function getPreferenceValue (config, name) {
-  var value = config.match(new RegExp('name="' + name + '" value="(.*?)"', "i"));
-  if(value && value[1]) {
-    return value[1];
-  } else {
-    return null;
-  }
-}
+var Config = require("./config");
+var {log, getCordovaParameter} = require('./utils')
 
 function replacePlaceholdersInPlist(plistPath, placeHolderValues) {
     var plistContents = fs.readFileSync(plistPath, 'utf8');
@@ -53,21 +18,9 @@ function replacePlaceholdersInPlist(plistPath, placeHolderValues) {
     }
     fs.writeFileSync(plistPath, plistContents);
 }
-
-function getCordovaParameter(variableName, contents) {
-  var variable;
-  if(process.argv.join("|").indexOf(variableName + "=") > -1) {
-    var re = new RegExp(variableName + '=(.*?)(\||$))', 'g');
-    variable = process.argv.join("|").match(re)[1];
-  } else {
-    variable = getPreferenceValue(contents, variableName);
-  }
-  return variable;
-}
-
 console.log('\x1b[40m');
 log(
-  'Running addTargetToXcodeProject hook, patching xcode project 🦄 ',
+  '⭐️ Running addTargetToXcodeProject hook, patching xcode project 🦄 ',
   'start'
 );
 
@@ -75,7 +28,7 @@ module.exports = function (context) {
   var deferral = new Q.defer();
 
   if (context.opts.cordova.platforms.indexOf('ios') < 0) {
-    log('You have to add the ios platform before adding this plugin!', 'error');
+    log('🚨 You have to add the ios platform before adding this plugin!', 'error');
   }
 
   var contents = fs.readFileSync(
@@ -84,24 +37,36 @@ module.exports = function (context) {
   );
 
   // Get the plugin variables from the parameters or the config file
-  var WIDGET_NAME = getCordovaParameter("WIDGET_NAME", contents);
-  var WIDGET_BUNDLE_SUFFIX = getCordovaParameter("WIDGET_BUNDLE_SUFFIX", contents);
+  //TROCAR PELO APP ID INTEIRO DO APP CLIP?
+
+
+  const args = process.argv
+
+  var AppClipAppId;
+  for (const arg of args) {  
+    if (arg.includes('APPCLIP_APP_ID')){
+      var stringArray = arg.split("=");
+      AppClipAppId = stringArray.slice(-1).pop();
+    }
+  }
+  //var AppClipAppId = getCordovaParameter("APPCLIP_APP_ID", contents);
+  log('➡️ Your App Clip App id will be: ' + AppClipAppId, 'info');
+
   var ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = getCordovaParameter("ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", contents);
-  var SWIFT_VERSION = getCordovaParameter("SWIFT_VERSION", contents);
 
   if (contents) {
     contents = contents.substring(contents.indexOf('<'));
   }
 
   // Get the bundle-id from config.xml
-  var etree = elementTree.parse(contents);
-  var bundleId = etree.getroot().get('id');
-  log('Bundle id of your host app: ' + bundleId, 'info');
+  //var etree = elementTree.parse(contents);
+  //var bundleId = etree.getroot().get('id');
+  //log('➡️ Bundle id of your host app: ' + bundleId, 'info');
 
   var iosFolder = context.opts.cordova.project
     ? context.opts.cordova.project.root
     : path.join(context.opts.projectRoot, 'platforms/ios/');
-  log('Folder containing your iOS project: ' + iosFolder, 'info');
+  log('➡️ Folder containing your iOS project: ' + iosFolder, 'info');
 
   fs.readdir(iosFolder, function (err, data) {
     var projectFolder;
@@ -124,17 +89,10 @@ module.exports = function (context) {
         pbxProject.parseSync();
       }
 
-      var widgetName = WIDGET_NAME || projectName + ' App Clip';
-      log('Your widget will be named: ' + widgetName, 'info');
+      var appClipName = Config.EXT_NAME;
+      log('Your appClip will be named: ' + appClipName, 'info');
 
-
-      var appClipBundleId = WIDGET_BUNDLE_SUFFIX || 'clip';
-      log('Your App Clip bundle id will be: ' + bundleId + '.' + appClipBundleId, 'info');
-
-      //var widgetBundleId = WIDGET_BUNDLE_SUFFIX || 'widget';
-      //log('Your widget bundle id will be: ' + bundleId + '.' + widgetBundleId, 'info');
-
-      var widgetFolder = path.join(iosFolder, widgetName);
+      var appClipFolder = path.join(iosFolder, appClipName);
       var sourceFiles = [];
       var resourceFiles = [];
       var configFiles = [];
@@ -148,6 +106,7 @@ module.exports = function (context) {
       var entitlementsFileName;
       var projectPlistPath = path.join(iosFolder, projectName, projectName + '-Info.plist');
       var projectPlistJson = plist.parse(fs.readFileSync(projectPlistPath, 'utf8'));
+      //ACHO QUE O PLACEHOLDERVALUES É O PLIST DO TARGET DAS APPCLIPS!
       var placeHolderValues = [
         {
           placeHolder: '__DISPLAY_NAME__',
@@ -157,9 +116,10 @@ module.exports = function (context) {
           placeHolder: '__APP_IDENTIFIER__',
           value: projectPlistJson['CFBundleIdentifier']
         },
+        //NÃO QUERO SUFIXO! QUERO O NOME DA APP CLIP INTEIRO!!
         {
           placeHolder: '__BUNDLE_SUFFIX__',
-          value: appClipBundleId
+          value: appClipName
         },
         {
           placeHolder: '__BUNDLE_SHORT_VERSION_STRING__',
@@ -171,7 +131,7 @@ module.exports = function (context) {
         }
       ];
 
-      fs.readdirSync(widgetFolder).forEach(file => {
+      fs.readdirSync(appClipFolder).forEach(file => {
         if (!/^\..*/.test(file)) {
           // Ignore junk files like .DS_Store
           var fileExtension = path.extname(file);
@@ -194,14 +154,14 @@ module.exports = function (context) {
             case '.entitlements':
             case '.xcconfig':
               if (fileExtension === '.plist') {
-                replacePlaceholdersInPlist(path.join(widgetFolder, file), placeHolderValues);
+                replacePlaceholdersInPlist(path.join(appClipFolder, file), placeHolderValues);
               }
               if (fileExtension === '.xcconfig') {
                 addXcconfig = true;
                 xcconfigFileName = file;
               }
               if (fileExtension === '.entitlements') {
-                replacePlaceholdersInPlist(path.join(widgetFolder, file), placeHolderValues);
+                replacePlaceholdersInPlist(path.join(appClipFolder, file), placeHolderValues);
                 addEntitlementsFile = true;
                 entitlementsFileName = file;
               }
@@ -215,7 +175,7 @@ module.exports = function (context) {
         }
       });
 
-      log('Found following files in your widget folder:', 'info');
+      log('Found following files in your App Clip folder:', 'info');
       console.log('Source-files: ');
       sourceFiles.forEach(file => {
         console.log(' - ', file);
@@ -233,9 +193,10 @@ module.exports = function (context) {
 
       // Add PBXNativeTarget to the project
       var target = pbxProject.addTarget(
-        widgetName,
+        appClipName,
         'app_clip',
-        widgetName
+        //'app_extension',
+        appClipName
       );
       if (target) {
         log('Successfully added PBXNativeTarget!', 'info');
@@ -243,19 +204,19 @@ module.exports = function (context) {
 
       // Create a separate PBXGroup for the widgets files, name has to be unique and path must be in quotation marks
       var pbxGroupKey = pbxProject.pbxCreateGroup(
-        'Widget',
-        '"' + widgetName + '"'
+        'AppClip',
+        '"' + appClipName + '"'
       );
       if (pbxGroupKey) {
         log(
           'Successfully created empty PbxGroup for folder: ' +
-          widgetName +
-          ' with alias: Widget',
+          appClipName +
+          ' with alias: AppClip',
           'info'
         );
       }
 
-      // Add the PbxGroup to cordovas "CustomTemplate"-group
+      // Add the PbxGroup to cordova's "CustomTemplate"-group
       var customTemplateKey = pbxProject.findPBXGroupKey({
         name: 'CustomTemplate',
       });
@@ -352,42 +313,6 @@ module.exports = function (context) {
         'Successfully added ' + resourceFiles.length + ' resource files!',
         'info'
       );
-
-      // Add build settings for Swift support, bridging header and xcconfig files
-      var configurations = pbxProject.pbxXCBuildConfigurationSection();
-      for (var key in configurations) {
-        if (typeof configurations[key].buildSettings !== 'undefined') {
-          var buildSettingsObj = configurations[key].buildSettings;
-          if (typeof buildSettingsObj['PRODUCT_NAME'] !== 'undefined') {
-            var productName = buildSettingsObj['PRODUCT_NAME'];
-            if (productName.indexOf('Widget') >= 0) {
-              if (addXcconfig) {
-                configurations[key].baseConfigurationReference =
-                  xcconfigReference + ' /* ' + xcconfigFileName + ' */';
-                log('Added xcconfig file reference to build settings!', 'info');
-              }
-              if (addEntitlementsFile) {
-                buildSettingsObj['CODE_SIGN_ENTITLEMENTS'] = '"' + widgetName + '/' + entitlementsFileName + '"';
-                log('Added entitlements file reference to build settings!', 'info');
-              }
-              if (projectContainsSwiftFiles) {
-                buildSettingsObj['SWIFT_VERSION'] = SWIFT_VERSION || '3.0';
-                buildSettingsObj['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES || 'YES';
-                log('Added build settings for swift support!', 'info');
-              }
-              if (addBridgingHeader) {
-                buildSettingsObj['SWIFT_OBJC_BRIDGING_HEADER'] =
-                  '"$(PROJECT_DIR)/' +
-                  widgetName +
-                  '/' +
-                  bridgingHeaderName +
-                  '"';
-                log('Added bridging header reference to build settings!', 'info');
-              }
-            }
-          }
-        }
-      }
 
       // Write the modified project back to disc
       log('Writing the modified project back to disk ...', 'info');
