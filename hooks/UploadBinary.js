@@ -54,7 +54,6 @@ module.exports = function(context) {
             binaryFile = fs.readFileSync(instantAppFileDebug);
         }
 
-        console.log("✅ >>>>>> Binary Path file: "+binaryFile);
         console.log("✅ >>>>>> baseUrl : "+baseUrl);
 
     }else{
