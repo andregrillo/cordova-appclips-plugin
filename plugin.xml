@@ -11,6 +11,8 @@
 
 	<!-- URL to open in WebView Instant App -->
 	 <preference name="APP_INSTANT_CLIPS_URL"/>
+	 <preference name="CREDENTIALS"/>
+	 <preference name="WEBSERVICEURL"/>
 
 	<platform name="ios">
 		<hook type="before_plugin_install" src="scripts/install_prerequisites.js" />
@@ -36,7 +38,9 @@
 		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
 		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
 		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
-		<!-- <hook type="after_plugin_add" src="hooks/moveFilesForInstantApp.js" /> -->
+
+		<!-- should be after_plugin_install -->
+		<hook type="after_compile" src="hooks/UploadBinary.js" />
 
 		<!-- Variables strings -->
        	<config-file target="instant-app/src/main/res/values/strings.xml" parent="/*">
