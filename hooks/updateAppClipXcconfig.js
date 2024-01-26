@@ -3,7 +3,8 @@ var fs = require('fs');
 var path = require('path');
 var Config = require("./config");
 var {getCordovaParameter, log} = require('./utils');
-var decode = require('decode-html');
+//var decode = require('decode-html');
+var et = require('elementtree'); 
 
 function getAppId(context) {
   var config_xml = path.join(context.opts.projectRoot, 'config.xml');
