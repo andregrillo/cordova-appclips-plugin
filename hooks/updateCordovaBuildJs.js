@@ -3,6 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
+const preferences = require('cordova-plugin-ionic/preferences');
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -35,11 +36,8 @@ module.exports = function(context) {
 //      }
 //    }
 
-    var contents = fs.readFileSync(
-        path.join(context.opts.projectRoot, 'config.xml'),
-        'utf-8'
-    );
-    var ppDecoded = decode(getCordovaParameter("PROVISIONING_PROFILES",contents));
+
+    var ppDecoded = preferences.get('PROVISIONING_PROFILES');
 
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
     var ppString = "";

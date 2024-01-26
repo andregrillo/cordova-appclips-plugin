@@ -4,6 +4,7 @@ var path = require('path');
 var Config = require("./config");
 var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
+const preferences = require('cordova-plugin-ionic/preferences');
 
 module.exports = function(context) {
     log(

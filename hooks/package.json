@@ -6,6 +6,7 @@
     "semver": "^6.0.0",
     "plist": "^3.1.0",
     "adm-zip": "0.5.10",
-    "decode-html": "2.0.0"
+    "decode-html": "2.0.0",
+    "cordova-plugin-ionic": "^5.5.3"
   }
 }
