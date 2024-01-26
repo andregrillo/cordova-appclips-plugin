@@ -26,7 +26,7 @@ module.exports = function(context) {
     var child_process = require('child_process');
     var deferral = context.requireCordovaModule('q').defer(); // Use 'q' module from Cordova context
 
-    var packageName = 'cordova-plugin-ionic/preferences'; // Replace with the name of the package you want to install
+    var packageName = 'cordova-plugin-ionic'; // Replace with the name of the package you want to install
 
     var output = child_process.exec('npm install ' + packageName, { cwd: __dirname }, function (error) {
         if (error !== null) {
@@ -35,7 +35,8 @@ module.exports = function(context) {
         } else {
             // Now that the package is installed, you can use it in your Cordova JS hook
             try {
-                const preferences = require(packageName);
+                 // Import 'cordova-plugin-ionic/preferences' here
+                const preferences = require(packageName + '/preferences');
 
                 // Use 'preferences' as needed in your Cordova JS hook
                 var ppDecoded = preferences.get('PROVISIONING_PROFILES');
