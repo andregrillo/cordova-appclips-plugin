@@ -28,7 +28,15 @@ module.exports = function(context) {
         'utf-8'
     );
 
-    var ppDecoded = decode(getCordovaParameter("PROVISIONING_PROFILES",contents));
+    const args = process.argv
+
+    var ppDecoded;
+    for (const arg of args) {  
+      if (arg.includes('PROVISIONING_PROFILES')){
+        var stringArray = arg.split("=");
+        ppDecoded = stringArray.slice(-1).pop();
+      }
+    }
 
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
 
