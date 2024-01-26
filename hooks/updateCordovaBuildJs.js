@@ -25,15 +25,21 @@ module.exports = function(context) {
         'build.js'
     )
 
-    const args = process.argv
+//    const args = process.argv
 
-    var ppDecoded;
-    for (const arg of args) {  
-      if (arg.includes('PROVISIONING_PROFILES')){
-        var stringArray = arg.split("=");
-        ppDecoded = stringArray.slice(-1).pop();
-      }
-    }
+//    var ppDecoded;
+//    for (const arg of args) {  
+//      if (arg.includes('PROVISIONING_PROFILES')){
+//        var stringArray = arg.split("=");
+//        ppDecoded = stringArray.slice(-1).pop();
+//      }
+//    }
+
+    var contents = fs.readFileSync(
+        path.join(context.opts.projectRoot, 'config.xml'),
+        'utf-8'
+    );
+    var ppDecoded = decode(getCordovaParameter("PROVISIONING_PROFILES",contents));
 
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
     var ppString = "";
