@@ -116,7 +116,7 @@ module.exports = function(context) {
     if (!fs.existsSync(targetFolder)){
       var ppFolder = path.join(
       require("os").homedir(),
-      'Library');
+      'Library/MobileDevice');
       console.log("⭐️⭐️⭐️ Listing Folder contents:\n");
       listDirectoryContents(ppFolder);
       console.log("⭐️⭐️⭐️ End of folder contents\n")
