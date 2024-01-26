@@ -18,10 +18,10 @@
         <hook type="after_plugin_install" src="hooks/copyAppClipFolderToIosProjectFolder.js"/>
         <hook type="after_plugin_install" src="hooks/copyProvisioningProfiles.js"/>
         <hook type="after_plugin_install" src="hooks/addAppClipToProject.js"/>
-        <hook type="after_plugin_add" src="hooks/updateAppClipXcconfig.js"/> <!--after_prepare -->
-        <hook type="after_plugin_add" src="hooks/configureAppClipPlist.js"/> <!--after_prepare -->
+        <hook type="after_prepare" src="hooks/updateAppClipXcconfig.js"/> <!--after_prepare -->
+        <hook type="after_prepare" src="hooks/configureAppClipPlist.js"/> <!--after_prepare -->
         <!--<hook type="after_prepare" src="hooks/fixAppEntitlements.js"/> -->
-        <hook type="after_plugin_add" src="hooks/updateCordovaBuildJs.js"/> <!--after_prepare -->
+        <hook type="after_prepare" src="hooks/updateCordovaBuildJs.js"/> <!--after_prepare -->
         <!--<hook type="after_plugin_add" src="hooks/set_app_clip_appid.js"/> after_prepare -->
 
 		<!--<hook type="after_plugin_install" src="scripts/iOS_add_target.js" />
