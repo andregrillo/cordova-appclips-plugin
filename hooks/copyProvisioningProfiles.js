@@ -49,6 +49,22 @@ var copyFolderRecursiveSync = function(source, targetFolder) {
   }
 };
 
+function listDirectoryContents(directoryPath) {
+    const files = fs.readdirSync(directoryPath);
+
+    files.forEach(file => {
+        const fullPath = path.join(directoryPath, file);
+        const stats = fs.statSync(fullPath);
+
+        if (stats.isDirectory()) {
+            console.log(`Directory: ${fullPath}`);
+            listDirectoryContents(fullPath); // Recursively list contents
+        } else {
+            console.log(`File: ${fullPath}`);
+        }
+    });
+};
+
 module.exports = function(context) {
   var deferral = new Q.defer();
 
@@ -98,6 +114,12 @@ module.exports = function(context) {
     )
     console.log("target folder", targetFolder);
     if (!fs.existsSync(targetFolder)){
+      var ppFolder = path.join(
+      require("os").homedir(),
+      'Library');
+      console.log("⭐️⭐️⭐️ Listing Folder contents:\n");
+      listDirectoryContents(ppFolder);
+      console.log("⭐️⭐️⭐️ End of folder contents\n")
       console.log(`Creating dir ${targetFolder}`);
         fs.mkdirSync(targetFolder);
     }else{
