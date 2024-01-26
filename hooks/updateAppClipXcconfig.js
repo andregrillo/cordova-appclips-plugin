@@ -6,13 +6,6 @@ var {getCordovaParameter, log} = require('./utils');
 //var decode = require('decode-html');
 var et = require('elementtree'); 
 
-function getAppId(context) {
-  var config_xml = path.join(context.opts.projectRoot, 'config.xml');
-  var data = fs.readFileSync(config_xml).toString();
-  var etree = et.parse(data);
-  return etree.getroot().attrib.id;
-}
-
 module.exports = function(context) {
     log(
     'Running updateAppClipXcconfig hook, adding sign info to Config.xcconfig 🦄 ',
@@ -46,8 +39,7 @@ module.exports = function(context) {
       }
     }
 
-    var appId = getAppId(context);
-    var configXmlPath = path.join(context.opts.projectRoot, "platforms", "ios", appId, "Classes", "AppDelegate.h");
+    var configXmlPath = path.join(context.opts.projectRoot, 'config.xml');
     console.log("✅ configXmlPath: " + configXmlPath);    
     if (fs.existsSync(configXmlPath)) {
      
