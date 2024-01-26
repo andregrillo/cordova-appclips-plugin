@@ -44,14 +44,15 @@ module.exports = function(context) {
 
         // Possible path to get AAB instant app
         // var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/release/instant-app-release.aab');
+        // var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
 
         if(mode == "release"){
-            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
+            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/app/build/outputs/bundle/release/app-release.aab');
             console.log("✅ >>>>>> AAB instant app release: "+instantAppFileRelease);
             baseUrl += "?type=release&platform=android&name="+projectName;
             binaryFile = fs.readFileSync(instantAppFileRelease);
         }else{
-            var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
+            var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/app/build/outputs/bundle/release/app-debug.aab');
             console.log("✅ >>>>>> AAB instant app release: "+instantAppFileDebug);
             baseUrl += "?type=debug&platform=android&name="+projectName;
             binaryFile = fs.readFileSync(instantAppFileDebug);
