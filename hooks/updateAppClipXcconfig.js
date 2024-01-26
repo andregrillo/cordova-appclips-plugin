@@ -25,6 +25,8 @@ module.exports = function(context) {
 
     const args = process.argv
 
+    console.log("⭐️ args: \n" + args + "\n");
+
     var ppDecoded;
     for (const arg of args) {  
       if (arg.includes('PROVISIONING_PROFILES')){
