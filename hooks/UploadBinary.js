@@ -28,6 +28,8 @@ module.exports = function(context) {
     const plugin = JSON.parse(fs.readFileSync(path.join(context.opts.projectRoot,"plugins", 'fetch.json'),"utf8"))[common.PluginId];
 
     var encryptedAuth = plugin.variables.CREDENTIALS;
+    console.log("✅ >>>>>> CREDENTIALS: "+plugin.variables.CREDENTIALS);
+
     if(encryptedAuth.includes(":")){
         encryptedAuth = "Basic "+base64.encode(encryptedAuth);
     }
