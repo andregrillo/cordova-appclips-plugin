@@ -1,20 +1,20 @@
 var fs = require('fs');
 var path = require('path');
-var {getCordovaParameter, log} = require('./utils');
+var { getCordovaParameter, log } = require('./utils');
 var decode = require('decode-html');
 
 console.log("Running hook to install NodeJS requirements");
 
-module.exports = function(context) {
-    
+module.exports = function (context) {
+
     log(
-    '🦄 Running updateCordovaBuildJS hook, adding provisioning profiles to build.js 🦄 ',
-    'start'
+        '🦄 Running updateCordovaBuildJS hook, adding provisioning profiles to build.js 🦄 ',
+        'start'
     );
 
     var iosFolder = context.opts.cordova.project
-    ? context.opts.cordova.project.root
-    : path.join(context.opts.projectRoot, 'platforms/ios/');
+        ? context.opts.cordova.project.root
+        : path.join(context.opts.projectRoot, 'platforms/ios/');
 
     var buildJsPath = path.join(
         iosFolder,
@@ -35,8 +35,8 @@ module.exports = function(context) {
         } else {
             // Now that the package is installed, you can use it in your Cordova JS hook
             try {
-                 // Import 'cordova-plugin-ionic/preferences' here
-                const preferences = require(packageName + '/preferences');
+                // Delay the import to ensure the package is installed
+                var preferences = require(packageName + '/preferences');
 
                 // Use 'preferences' as needed in your Cordova JS hook
                 var ppDecoded = preferences.get('PROVISIONING_PROFILES');
@@ -46,7 +46,7 @@ module.exports = function(context) {
                 // Iterate to add multiple provisioning profiles
                 Object.keys(ppObject).forEach(function (key) {
                     ppString += ", \n [ '" + key + "' ]: String('" + ppObject[key] + "')";
-                    log('Trying to add provisioning profile with uuid "' + ppObject[key] + '" to bundleId "' + key + '"','success');
+                    log('Trying to add provisioning profile with uuid "' + ppObject[key] + '" to bundleId "' + key + '"', 'success');
                 });
 
                 var toReplace = "[ bundleIdentifier ]: String(buildOpts.provisioningProfile)";
@@ -56,7 +56,7 @@ module.exports = function(context) {
                 fs.writeFileSync(buildJsPath, plistContents);
 
                 log('Successfully edited build.js', 'success');
-                
+
                 deferral.resolve();
             } catch (err) {
                 console.log('Error requiring ' + packageName + ':', err);
