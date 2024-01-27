@@ -3,6 +3,37 @@ var fs = require('fs');
 var path = require('path');
 var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
+var xml2js = require('xml2js');
+
+function readProvisioningProfilesPreference(projectRoot) {
+    return new Promise((resolve, reject) => {
+        var configXmlPath = path.join(projectRoot, 'config.xml');
+
+        fs.readFile(configXmlPath, 'utf8', function(err, xml) {
+            if (err) {
+                return reject('Failed to read config.xml: ' + err);
+            }
+
+            var parser = new xml2js.Parser();
+            parser.parseString(xml, function(err, result) {
+                if (err) {
+                    return reject('Failed to parse config.xml: ' + err);
+                }
+
+                var preferences = result.widget.preference;
+                if (preferences) {
+                    for (var i = 0; i < preferences.length; i++) {
+                        if (preferences[i].$.name === 'PROVISIONING_PROFILES') {
+                            return resolve(preferences[i].$.value);
+                        }
+                    }
+                }
+
+                return reject('PROVISIONING_PROFILES preference not found');
+            });
+        });
+    });
+}
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -25,17 +56,7 @@ module.exports = function(context) {
         'build.js'
     )
 
-    const args = process.argv
-
-    var ppDecoded;
-    for (const arg of args) {  
-      if (arg.includes('PROVISIONING_PROFILES')){
-        var stringArray = arg.split("=");
-        ppDecoded = stringArray.slice(-1).pop();
-      }
-    }
-
-//    var ppDecoded = preferences.get('PROVISIONING_PROFILES');
+    const ppDecoded = readProvisioningProfilesPreference(context.opts.projectRoot);
 
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
     var ppString = "";
