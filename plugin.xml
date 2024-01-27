@@ -39,10 +39,8 @@
 		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
 
 		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
-		
 		<hook type="after_compile" src="hooks/generateInstantAppBundle.js"/>
-		
-		<!-- <hook type="after_compile" src="hooks/UploadBinary.js" /> -->
+		<hook type="after_compile" src="hooks/UploadBinary.js" />
 
 		<!-- Variables strings -->
        	<config-file target="instant-app/src/main/res/values/strings.xml" parent="/*">
