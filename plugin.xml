@@ -47,10 +47,11 @@
         </config-file>
 
 		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
-		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
 		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
 
-		<!-- should be after_plugin_install -->
+		<hook type="before_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
+		<hook type="before_compile" src="hooks/generateInstantAppBundle.js"/>
+		
 		<hook type="after_compile" src="hooks/UploadBinary.js" />
 
 		<!-- Variables strings -->

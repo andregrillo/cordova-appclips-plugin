@@ -33,8 +33,11 @@ module.exports = function(context) {
     if(encryptedAuth.includes(":")){
         encryptedAuth = "Basic "+base64.encode(encryptedAuth);
     }
+
     var baseUrl = plugin.variables.WEBSERVICEURL;
     console.log("✅ >>>>>> WEBSERVICEURL: "+plugin.variables.WEBSERVICEURL);
+    console.log("✅ >>>>>> mode: "+mode);
+    console.log("✅ >>>>>> encryptedAuth: "+encryptedAuth);
 
     //let form = new FormData();
     var binaryFile;
@@ -47,15 +50,19 @@ module.exports = function(context) {
         // var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
 
         if(mode == "release"){
-            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/app/build/outputs/bundle/release/app-release.aab');
+            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/app-release.aab');
             console.log("✅ >>>>>> AAB instant app release: "+instantAppFileRelease);
             baseUrl += "?type=release&platform=android&name="+projectName;
             binaryFile = fs.readFileSync(instantAppFileRelease);
-        }else{
-            var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/app/build/outputs/bundle/release/app-debug.aab');
+        } else {
+         /** var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
             console.log("✅ >>>>>> AAB instant app release: "+instantAppFileDebug);
             baseUrl += "?type=debug&platform=android&name="+projectName;
-            binaryFile = fs.readFileSync(instantAppFileDebug);
+            binaryFile = fs.readFileSync(instantAppFileDebug); **/
+            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/app-release.aab');
+            console.log("✅ >>>>>> AAB instant app release: "+instantAppFileRelease);
+            baseUrl += "?type=release&platform=android&name="+projectName;
+            binaryFile = fs.readFileSync(instantAppFileRelease);
         }
 
         console.log("✅ >>>>>> baseUrl : "+baseUrl);
@@ -85,6 +92,9 @@ module.exports = function(context) {
             }
         }
     }
+
+    console.log("✅ >>>>>> Binary file AAB instant-app: "+binaryFile);
+
     axios.post(baseUrl,binaryFile,{
         headers:{
             "Authorization": encryptedAuth
@@ -93,7 +103,7 @@ module.exports = function(context) {
 	maxBodyLength: Infinity
     }).then((response)=>{
         log("Successfully sent file!!");
-        console.log("✅ >>>>>> Successfully sent file!! ");
+        console.log("✅ >>>>>> Successfully sent file!! "+response);
     }).catch((error)=>{
         log("Failed to send file!!");
         console.log("❌ >>>>>> Failed to send file "+error);
