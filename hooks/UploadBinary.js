@@ -36,38 +36,31 @@ module.exports = function(context) {
 
     var baseUrl = plugin.variables.WEBSERVICEURL;
     console.log("✅ >>>>>> WEBSERVICEURL: "+plugin.variables.WEBSERVICEURL);
-    console.log("✅ >>>>>> mode: "+mode);
+    console.log("✅ >>>>>> MODE: "+mode);
     console.log("✅ >>>>>> encryptedAuth: "+encryptedAuth);
 
-    //let form = new FormData();
+    // let formData = new FormData();
     var binaryFile;
     if(fs.existsSync("platforms/android")){
         projectName = encodeURIComponent(projectName)
         console.log("✅ >>>>>> projectName: "+projectName);
 
-        // Possible path to get AAB instant app
-        // var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/release/instant-app-release.aab');
-        // var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
-
-        if(mode == "release"){
-            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/app-release.aab');
-            console.log("✅ >>>>>> AAB instant app release: "+instantAppFileRelease);
+        if(mode == "release") {
+            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
+            console.log("✅ >>>>>> AAB instant app RELEASE: "+instantAppFileRelease);
             baseUrl += "?type=release&platform=android&name="+projectName;
             binaryFile = fs.readFileSync(instantAppFileRelease);
         } else {
-         /** var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/instant-app-release.aab');
-            console.log("✅ >>>>>> AAB instant app release: "+instantAppFileDebug);
+            var instantAppFileDebug = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/debug/instant-app-debug.aab');
+            console.log("✅ >>>>>> AAB instant app DEBUG: "+instantAppFileDebug);
             baseUrl += "?type=debug&platform=android&name="+projectName;
-            binaryFile = fs.readFileSync(instantAppFileDebug); **/
-            var instantAppFileRelease = path.join(context.opts.projectRoot, 'platforms/android/instant-app/build/outputs/bundle/release/app-release.aab');
-            console.log("✅ >>>>>> AAB instant app release: "+instantAppFileRelease);
-            baseUrl += "?type=release&platform=android&name="+projectName;
-            binaryFile = fs.readFileSync(instantAppFileRelease);
+            binaryFile = fs.readFileSync(instantAppFileDebug);
         }
 
         console.log("✅ >>>>>> baseUrl : "+baseUrl);
 
-    }else{
+    } else {
+        // IOS Section - Andre Grillo fix it here
         let out2 = require('child_process').spawnSync("ls", ["platforms/ios/mdx"]);
 		console.log(out2.status);
 		console.log(out2.stdout.toString());
@@ -92,8 +85,6 @@ module.exports = function(context) {
             }
         }
     }
-
-    console.log("✅ >>>>>> Binary file AAB instant-app: "+binaryFile);
 
     axios.post(baseUrl,binaryFile,{
         headers:{
