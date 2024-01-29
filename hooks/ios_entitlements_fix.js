@@ -1,6 +1,7 @@
 const xcode = require('xcode'),
       fs = require('fs'),
-      path = require('path');
+      path = require('path'),
+      et = require('elementtree'); 
 
 function getAppId(context) {
   var config_xml = path.join(context.opts.projectRoot, 'config.xml');
