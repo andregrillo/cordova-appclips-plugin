@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var et = require('elementtree'); 
 
 function getAppId(context) {
   var config_xml = path.join(context.opts.projectRoot, 'config.xml');
