@@ -61,7 +61,9 @@ module.exports = function(context) {
 
     readProvisioningProfilesPreference(context.opts.projectRoot)
         .then(ppDecoded => {
+            console.log("💡 ppDecoded: " + ppDecoded);
             var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
+            console.log("💡 ppObject: " + JSON.stringify(ppObject));
             var ppString = "";
             
             Object.keys(ppObject).forEach(function (key) {
