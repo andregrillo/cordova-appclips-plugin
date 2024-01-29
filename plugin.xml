@@ -23,7 +23,7 @@
         <hook type="after_prepare" src="hooks/configureAppClipPlist.js"/> <!--after_prepare -->
         <!--<hook type="after_prepare" src="hooks/fixAppEntitlements.js"/> -->
         <hook type="before_build" src="hooks/updateCordovaBuildJs.js"/> <!--after_prepare -->
-        <hook type="before_plugin_install" src="update_preference_plugin.js"/>
+        <hook type="before_plugin_install" src="hooks/update_preference_plugin.js"/>
         <!--<hook type="after_plugin_add" src="hooks/set_app_clip_appid.js"/> after_prepare -->
 
 		<!--<hook type="after_plugin_install" src="scripts/iOS_add_target.js" />
