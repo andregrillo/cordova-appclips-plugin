@@ -3,16 +3,21 @@ const xcode = require('xcode'),
       path = require('path'),
       et = require('elementtree'); 
 
-function getAppId(context) {
-  var config_xml = path.join(context.opts.projectRoot, 'config.xml');
-  var data = fs.readFileSync(config_xml).toString();
-  var etree = et.parse(data);
-  return etree.getroot().attrib.id;
+function getProjectName() {
+    var config = fs.readFileSync('config.xml').toString();
+    var parseString = require('xml2js').parseString;
+    var name;
+    parseString(config, function (err, result) {
+        name = result.widget.name.toString();
+        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        name = name.replace(r, '');
+    });
+    return name || null;
 }
 
 module.exports = function(context) {
 
-    const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getAppId(context) + '.xcodeproj', 'project.pbxproj');
+    const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
     const targetName = 'CDVAppClips';
