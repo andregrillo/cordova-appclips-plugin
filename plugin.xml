@@ -8,7 +8,12 @@
 	<js-module name="CDVAppClips" src="www/CDVAppClips.js">
 		<clobbers target="cordova.plugins.appclips" />
 	</js-module>
+
 	<!-- URL to open in WebView Instant App -->
+	 <preference name="APP_INSTANT_CLIPS_URL"/>
+	 <preference name="CREDENTIALS"/>
+	 <preference name="WEBSERVICEURL"/>
+
 	<platform name="ios">
 		<preference name="PROVISIONING_PROFILES"/>
 		<hook type="before_plugin_install" src="hooks/install_custom_xcode_lib.js" />
@@ -39,13 +44,11 @@
 				<param name="ios-package" value="CDVAppClips" />
 			</feature>
 		</config-file>
-		<!--<source-file src="src/ios/CDVAppClips.swift" />-->
+		<source-file src="src/ios/CDVAppClips.swift" />
 	</platform>
 
 	<platform name="android">
-		<preference name="APP_INSTANT_CLIPS_URL"/>
-		<preference name="CREDENTIALS"/>
-		<preference name="WEBSERVICEURL"/>
+
 		<config-file parent="/*" target="res/xml/config.xml">
             <feature name="CDVAppClips">
                 <param name="android-package" value="com.outsystems.experts.appclips.CDVAppClips" />
@@ -54,11 +57,13 @@
         </config-file>
 
 		<hook type="after_plugin_install" src="hooks/moveInstantApp.js"/>
-		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
 		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
 
-		<!-- should be after_plugin_install -->
-		<hook type="after_compile" src="hooks/UploadBinary.js" />
+		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
+		<!-- <hook type="after_plugin_install" src="hooks/generateInstantAppBundle.js"/> -->
+
+		<!-- Check how execute upload after generated build AAB -->
+		<!-- <hook type="after_compile" src="hooks/UploadBinary.js" /> -->
 
 		<!-- Variables strings -->
        	<config-file target="instant-app/src/main/res/values/strings.xml" parent="/*">
