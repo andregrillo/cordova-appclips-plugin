@@ -5,9 +5,21 @@ var {getCordovaParameter, log} = require('./utils');
 var decode = require('decode-html');
 var xml2js = require('xml2js');
 
+function getProjectName() {
+    var config = fs.readFileSync('config.xml').toString();
+    var parseString = require('xml2js').parseString;
+    var name;
+    parseString(config, function (err, result) {
+        name = result.widget.name.toString();
+        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        name = name.replace(r, '');
+    });
+    return name || null;
+}
+
 function readProvisioningProfilesPreference(projectRoot) {
     return new Promise((resolve, reject) => {
-        var configXmlPath = path.join(projectRoot, 'config.xml');
+        var configXmlPath = path.join(projectRoot, 'platforms/ios', getProjectName(),'config.xml');
 
         fs.readFile(configXmlPath, 'utf8', function(err, xml) {
             if (err) {
