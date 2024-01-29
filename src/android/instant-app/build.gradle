@@ -14,7 +14,7 @@ android {
         minSdkVersion 22
         applicationId cordovaConfig.PACKAGE_NAMESPACE
         targetSdkVersion 34
-        versionCode 100089
+        versionCode getVersionCodeGenerated()
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,6 +52,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.google.android.gms:play-services-instantapps:18.0.1"
+}
+
+static def getVersionCodeGenerated() {
+    return (System.currentTimeMillis() / 1000).intValue()
 }
 
 def addSigningProps(propsFilePath, signingConfig) {

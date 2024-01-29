@@ -39,7 +39,7 @@
 		<hook type="after_plugin_install" src="hooks/updateInstantAppUrl.js"/>
 
 		<hook type="after_compile" src="hooks/registerInstantAppSettingsGralde.js"/>
-		<hook type="after_compile" src="hooks/generateInstantAppBundle.js"/>
+		<!-- <hook type="after_plugin_install" src="hooks/generateInstantAppBundle.js"/> -->
 
 		<!-- Check how execute upload after generated build AAB -->
 		<!-- <hook type="after_compile" src="hooks/UploadBinary.js" /> -->
