@@ -11,9 +11,9 @@ function getAppId(context) {
 
 module.exports = function(context) {
 
-    const projectPath = path.join(platformPath, getAppId(context) + '.xcodeproj', 'project.pbxproj');
+    const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getAppId(context) + '.xcodeproj', 'project.pbxproj');
 
-    const entitlementsPath = path.join(platformPath, + 'CDVAppClips/CDVAppClips.entitlements');
+    const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
     const targetName = 'CDVAppClips';
 
     const myProj = xcode.project(projectPath);
