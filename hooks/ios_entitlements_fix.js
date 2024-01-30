@@ -17,7 +17,7 @@ module.exports = function(context) {
     console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
     const projectRoot = context.opts.projectRoot; // Adjust this path as needed
-    const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName(),'.xcodeproj', 'project.pbxproj');
+    const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     try {
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
