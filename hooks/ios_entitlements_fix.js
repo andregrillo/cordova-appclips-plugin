@@ -22,7 +22,7 @@ module.exports = function(context) {
     const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
-    const targetName = 'AppClip';
+    const targetName = 'CDVAppClips';
 
     const myProj = xcode.project(projectPath);
     myProj.parseSync();
@@ -31,6 +31,7 @@ module.exports = function(context) {
     let target;
     const targets = myProj.hash.project.objects.PBXNativeTarget;
     for (let key in targets) {
+        console.log('⭐️⭐️⭐️ Found target:', targets[key].name);
         if (targets[key].name === targetName) {
             target = key;
             break;
