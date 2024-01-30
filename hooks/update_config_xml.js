@@ -14,7 +14,7 @@ function getAppId(context) {
 module.exports = function(context) {
     var rootdir = context.opts.projectRoot;
     var configFilePath = path.join(rootdir, 'platforms/ios/', getAppId(context), 'config.xml');
-
+    console.log("💡configFilePath: " + configFilePath);
     const args = process.argv
 
     var provisioningProfile;
