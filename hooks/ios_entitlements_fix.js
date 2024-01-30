@@ -1,11 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
+function getProjectName() {
+    var config = fs.readFileSync('config.xml').toString();
+    var parseString = require('xml2js').parseString;
+    var name;
+    parseString(config, function (err, result) {
+        name = result.widget.name.toString();
+        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        name = name.replace(r, '');
+    });
+    return name || null;
+}
+
 module.exports = function(context) {
     console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
-    const projectRoot = context.opts.projectRoot; // Adjust this path as needed
-    const projectPath = path.join(projectRoot, 'platforms/ios', 'YourProjectName.xcodeproj', 'project.pbxproj'); // Replace 'YourProjectName' with your actual project name
+    const projectRoot = context.opts.projectRoot; 
+    const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     try {
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
