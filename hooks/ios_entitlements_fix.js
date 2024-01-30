@@ -17,6 +17,8 @@ function getProjectName() {
 
 module.exports = function(context) {
 
+    console.log('💡 Setting AppClips Entitlements 💡');
+
     const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
