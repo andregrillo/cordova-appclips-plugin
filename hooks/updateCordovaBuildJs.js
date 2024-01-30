@@ -57,8 +57,8 @@ module.exports = function(context) {
         : path.join(context.opts.projectRoot, 'platforms/ios/');
     var buildJsPath = path.join(iosFolder, 'cordova/lib', 'build.js');
     console.log("👉 buildJsPath1: " + buildJsPath);
-    buildJsPath = "source/node_modules/cordova-ios/lib/build.js";
-    
+    //buildJsPath = "source/node_modules/cordova-ios/lib/build.js";
+
     console.log("👉 buildJsPath2: " + buildJsPath);
 
     listFilesAndSubdirectories('source/platforms/ios/cordova/lib/')
