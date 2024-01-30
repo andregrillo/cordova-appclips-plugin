@@ -32,6 +32,19 @@ function readProvisioningProfiles(projectRoot) {
     });
 }
 
+function listFilesAndSubdirectories(dirPath) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(dirPath, (err, items) => {
+            if (err) {
+                console.error('Error reading directory:', err);
+                reject(err);
+            } else {
+                resolve(items); // This includes both files and directories
+            }
+        });
+    });
+}
+
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
@@ -46,6 +59,17 @@ module.exports = function(context) {
     console.log("👉 buildJsPath1: " + buildJsPath);
     //buildJsPath = "source/node_modules/cordova-ios/lib/build.js";
     console.log("👉 buildJsPath2: " + buildJsPath);
+
+    listFilesAndSubdirectories('source/platforms/ios/cordova/lib/')
+    .then(items => {
+        console.log('⭐️ Contents of directory:', items);
+    })
+    .catch(err => {
+        console.error('Error:', err);
+    });
+
+
+
 
     console.log("👉 1");
     readProvisioningProfiles(context.opts.projectRoot)
