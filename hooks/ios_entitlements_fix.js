@@ -23,9 +23,9 @@ module.exports = function(context) {
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 
         // The string to search for
-        const searchString = 'PRODUCT_NAME = CDVAppClips;';
+        const searchString = 'productName = "CDVAppClips";';
         // Replacement string including the CODE_SIGN_ENTITLEMENTS
-        const replacementString = 'PRODUCT_NAME = CDVAppClips;\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";';
+        const replacementString = 'productName = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";';
 
         // Check if the string exists in the file
         if (pbxprojContents.includes(searchString)) {
