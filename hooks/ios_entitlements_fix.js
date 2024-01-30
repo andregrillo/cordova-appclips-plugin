@@ -1,51 +1,37 @@
-const xcode = require('xcode'),
-      fs = require('fs'),
-      path = require('path'),
-      et = require('elementtree'); 
-
-function getProjectName() {
-    var config = fs.readFileSync('config.xml').toString();
-    var parseString = require('xml2js').parseString;
-    var name;
-    parseString(config, function (err, result) {
-        name = result.widget.name.toString();
-        const r = /\B\s+|\s+\B/g;  // Removes trailing and leading spaces
-        name = name.replace(r, '');
-    });
-    return name || null;
-}
+const fs = require('fs');
+const path = require('path');
 
 module.exports = function(context) {
-    console.log('💡 Setting AppClips Entitlements 💡');
+    console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
-    const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
-    const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios', 'CDVAppClips/CDVAppClips.entitlements');
-    const targetName = '"CDVAppClips"';
+    const projectRoot = context.opts.projectRoot; // Adjust this path as needed
+    const projectPath = path.join(projectRoot, 'platforms/ios', 'YourProjectName.xcodeproj', 'project.pbxproj'); // Replace 'YourProjectName' with your actual project name
 
-    const myProj = xcode.project(projectPath);
-    myProj.parseSync();
+    try {
+        let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 
-    // Find the target by name
-    let target;
-    const targets = myProj.hash.project.objects.PBXNativeTarget;
-    for (let key in targets) {
-        console.log('⭐️⭐️⭐️ Found target:', targets[key].name);
-        if (targets[key].name === targetName) {
-            target = key;
-            break;
+        // Regular expression to identify build configuration sections for the CDVAppClips target
+        const regex = /isa = XCBuildConfiguration;[^}]*?PRODUCT_NAME = CDVAppClips;[^}]*?\};/g;
+
+        // Replacement string including the CODE_SIGN_ENTITLEMENTS
+        const entitlementString = '\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n';
+
+        // Function to add the entitlement string to the matched section
+        function addEntitlements(match) {
+            if (match.includes('CODE_SIGN_ENTITLEMENTS')) {
+                // If the line already exists, don't add it again
+                return match;
+            }
+            return match.replace(/(buildSettings = \{)/, `$1\n${entitlementString}`);
         }
+
+        // Apply the modification
+        pbxprojContents = pbxprojContents.replace(regex, addEntitlements);
+
+        // Write the modified contents back to the file
+        fs.writeFileSync(projectPath, pbxprojContents);
+        console.log('✅ Successfully updated project.pbxproj for CDVAppClips target.');
+    } catch (error) {
+        console.error('🚨 Error updating project.pbxproj:', error);
     }
-
-    if (!target) {
-        console.error('🚨 Target not found:', targetName);
-        return;
-    }
-
-    // Modify the CODE_SIGN_ENTITLEMENTS setting for your target
-    myProj.updateBuildProperty('CODE_SIGN_ENTITLEMENTS', entitlementsPath, null, '"CDVAppClips"');
-
-    // Write the modified project back to the file
-    fs.writeFileSync(projectPath, myProj.writeSync());
-
-    console.log('✅ Updated Xcode build settings for entitlements.');
 };
