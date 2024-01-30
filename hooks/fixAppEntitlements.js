@@ -26,7 +26,7 @@ function replacePlaceholdersInPlist(plistPath, placeHolderValues) {
 
 console.log('\x1b[40m');
 log(
-  '🦄 Running fixAppEntitlements hook, fixing the app entitlements 🦄 ',
+  'Running fixAppEntitlements hook, fixing the app entitlements 🦄 ',
   'start'
 );
 
@@ -70,7 +70,7 @@ module.exports = function (context) {
         var entitlementsPath = path.join(iosFolder, projectName, 'Entitlements-' + config + '.plist');
         replacePlaceholdersInPlist(entitlementsPath, placeHolderValues);
       });
-      log('🦄 Successfully added app group information to the app entitlement files!', 'success');
+      log('Successfully added app group information to the app entitlement files!', 'success');
 
       console.log('\x1b[0m'); // reset
 
