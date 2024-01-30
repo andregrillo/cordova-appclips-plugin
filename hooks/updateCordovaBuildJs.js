@@ -43,6 +43,9 @@ module.exports = function(context) {
         ? context.opts.cordova.project.root
         : path.join(context.opts.projectRoot, 'platforms/ios/');
     var buildJsPath = path.join(iosFolder, 'cordova/lib', 'build.js');
+    console.log("👉 buildJsPath1: " + buildJsPath);
+    buildJsPath = "source/node_modules/cordova-ios/lib/build.js";
+    console.log("👉 buildJsPath2: " + buildJsPath);
 
     console.log("👉 1");
     readProvisioningProfiles(context.opts.projectRoot)
@@ -63,6 +66,8 @@ module.exports = function(context) {
             var toReplace = "[ bundleIdentifier ]: String(buildOpts.provisioningProfile)";
             var regexp = new RegExp(escapeRegExp(toReplace), 'g');
             var plistContents = fs.readFileSync(buildJsPath, 'utf8');
+            console.log("👉 regexp: " + regexp);
+            console.log("👉 ppString: " + ppString);
             plistContents = plistContents.replace(regexp, toReplace + ppString);
             console.log("👉 5");
             fs.writeFileSync(buildJsPath, plistContents);
@@ -71,7 +76,7 @@ module.exports = function(context) {
             log('Successfully edited build.js', 'success');
         })
         .catch(error => {
-            console.error('Error reading provisioning-profiles.txt:', error);
+            console.error('❌ ', error);
             
         });
 };
