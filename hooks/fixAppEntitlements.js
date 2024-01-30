@@ -83,7 +83,7 @@ module.exports = function (context) {
 
     // Update entitlements for the specific target
     ['Debug', 'Release'].forEach(config => {
-      var entitlementsPath = path.join(iosFolder, projectName, targetFolderName, 'AppClip.entitlements');
+      var entitlementsPath = path.join(iosFolder, targetFolderName, 'CDVAppClips.entitlements');
       if (fs.existsSync(entitlementsPath)) {
         replacePlaceholdersInPlist(entitlementsPath, placeHolderValues);
         log('⭐️ Successfully updated entitlements for target: ' + targetFolderName, 'success');
