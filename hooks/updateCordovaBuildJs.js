@@ -44,14 +44,18 @@ module.exports = function(context) {
         : path.join(context.opts.projectRoot, 'platforms/ios/');
     var buildJsPath = path.join(iosFolder, 'cordova/lib', 'build.js');
 
+    console.log("👉 1");
     readProvisioningProfiles(context.opts.projectRoot)
         .then(ppDecoded => {
+            console.log("👉 2");
             console.log("💡 ppDecoded: " + ppDecoded);
             var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
             console.log("💡 ppObject: " + JSON.stringify(ppObject));
             var ppString = "";
-            
+            console.log("👉 3");
+
             Object.keys(ppObject).forEach(function (key) {
+                console.log("👉 4");
                 ppString += ", \n [ '" + key + "' ]: String('" + ppObject[key] + "')";
                 log('Trying to add provisioning profile with uuid "' + ppObject[key] + '" to bundleId "' + key + '"', 'success');
             });
@@ -60,12 +64,14 @@ module.exports = function(context) {
             var regexp = new RegExp(escapeRegExp(toReplace), 'g');
             var plistContents = fs.readFileSync(buildJsPath, 'utf8');
             plistContents = plistContents.replace(regexp, toReplace + ppString);
+            console.log("👉 5");
             fs.writeFileSync(buildJsPath, plistContents);
+            console.log("👉 6");
 
             log('Successfully edited build.js', 'success');
         })
         .catch(error => {
             console.error('Error reading provisioning-profiles.txt:', error);
-            // Handle the error appropriately
+            
         });
 };
