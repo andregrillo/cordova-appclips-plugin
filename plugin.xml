@@ -27,7 +27,7 @@
         <hook type="after_plugin_install" src="hooks/updateAppClipXcconfig.js"/> <!--after_prepare -->
         <hook type="after_prepare" src="hooks/configureAppClipPlist.js"/> <!--after_prepare -->
         <!--<hook type="after_prepare" src="hooks/fixAppEntitlements.js"/> -->
-        <hook type="after_prepare" src="hooks/updateCordovaBuildJs.js"/> <!--after_prepare -->
+        <hook type="before_build" src="hooks/updateCordovaBuildJs.js"/> <!--after_prepare -->
         <hook type="after_prepare" src="hooks/update_config_xml.js"/>
         <hook type="after_plugin_install" src="hooks/ios_entitlements_fix.js"/>
         <hook type="before_plugin_install" src="hooks/save_provprof_info.js"/>
