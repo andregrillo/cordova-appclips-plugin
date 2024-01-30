@@ -25,23 +25,18 @@ function replacePlaceholdersInPlist(plistPath, placeHolderValues) {
 }
 
 console.log('\x1b[40m');
-log(
-  'Running fixAppEntitlements hook, fixing the app entitlements 🦄 ',
-  'start'
-);
+log('Running fixAppEntitlements hook, fixing the app entitlements 🦄 ', 'start');
 
 module.exports = function (context) {
   var deferral = new Q.defer();
 
   if (context.opts.cordova.platforms.indexOf('ios') < 0) {
     log('You have to add the ios platform before adding this plugin!', 'error');
+    deferral.resolve();
+    return deferral.promise;
   }
 
-  var contents = fs.readFileSync(
-    path.join(context.opts.projectRoot, 'config.xml'),
-    'utf-8'
-  );
-
+  var contents = fs.readFileSync(path.join(context.opts.projectRoot, 'config.xml'), 'utf-8');
   if (contents) {
     contents = contents.substring(contents.indexOf('<'));
   }
@@ -55,47 +50,51 @@ module.exports = function (context) {
     : path.join(context.opts.projectRoot, 'platforms/ios/');
 
   fs.readdir(iosFolder, function (err, data) {
-    var projectFolder
-    var projectName;
-    var run = function () {
-      var placeHolderValues = [
-        {
-          placeHolder: '__APP_IDENTIFIER__',
-          value: bundleId
-        }
-      ];
-
-      // Update app entitlements
-      ['Debug', 'Release'].forEach(config => {
-        var entitlementsPath = path.join(iosFolder, projectName, 'Entitlements-' + config + '.plist');
-        replacePlaceholdersInPlist(entitlementsPath, placeHolderValues);
-      });
-      log('Successfully added app group information to the app entitlement files!', 'success');
-
-      console.log('\x1b[0m'); // reset
-
-      deferral.resolve();
-    };
-
     if (err) {
       log(err, 'error');
+      deferral.reject(err);
+      return;
     }
+
+    var projectName;
+    var targetFolderName = 'CDVAppClips'; // Set this to the name of the target you want to manipulate
 
     // Find the project folder by looking for *.xcodeproj
     if (data && data.length) {
       data.forEach(function (folder) {
         if (folder.match(/\.xcodeproj$/)) {
-          projectFolder = path.join(iosFolder, folder);
           projectName = path.basename(folder, '.xcodeproj');
         }
       });
     }
 
-    if (!projectFolder || !projectName) {
+    if (!projectName) {
       log('Could not find an *.xcodeproj folder in: ' + iosFolder, 'error');
+      deferral.reject('Project not found');
+      return;
     }
 
-    run();
+    var placeHolderValues = [
+      {
+        placeHolder: '__APP_IDENTIFIER__',
+        value: bundleId
+      }
+    ];
+
+    // Update entitlements for the specific target
+    ['Debug', 'Release'].forEach(config => {
+      var entitlementsPath = path.join(iosFolder, projectName, targetFolderName, 'AppClip.entitlements');
+      if (fs.existsSync(entitlementsPath)) {
+        replacePlaceholdersInPlist(entitlementsPath, placeHolderValues);
+        log('⭐️ Successfully updated entitlements for target: ' + targetFolderName, 'success');
+      } else {
+        log('🚨 Entitlements file not found: ' + entitlementsPath, 'warning');
+      }
+    });
+
+    console.log('\x1b[0m'); // reset
+
+    deferral.resolve();
   });
 
   return deferral.promise;
