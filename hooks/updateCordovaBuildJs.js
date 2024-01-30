@@ -19,7 +19,7 @@ function getProjectName() {
 function readProvisioningProfiles(projectRoot) {
     return new Promise((resolve, reject) => {
         const filePath = path.join(projectRoot, 'provisioning-profiles.txt');
-
+        console.log("💡 filePath: " + filePath);
         fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
                 console.error('🚨 Error reading provisioning-profiles.txt:', err);
