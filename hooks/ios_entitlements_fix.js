@@ -9,19 +9,17 @@ function getProjectName() {
     var name;
     parseString(config, function (err, result) {
         name = result.widget.name.toString();
-        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        const r = /\B\s+|\s+\B/g;  // Removes trailing and leading spaces
         name = name.replace(r, '');
     });
     return name || null;
 }
 
 module.exports = function(context) {
-
     console.log('💡 Setting AppClips Entitlements 💡');
 
     const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
-
-    const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
+    const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios', 'CDVAppClips/CDVAppClips.entitlements');
     const targetName = '"CDVAppClips"';
 
     const myProj = xcode.project(projectPath);
@@ -44,7 +42,7 @@ module.exports = function(context) {
     }
 
     // Modify the CODE_SIGN_ENTITLEMENTS setting for your target
-    myProj.updateBuildProperty('CODE_SIGN_ENTITLEMENTS', entitlementsPath, target);
+    myProj.updateBuildProperty('CODE_SIGN_ENTITLEMENTS', entitlementsPath, null, '"CDVAppClips"');
 
     // Write the modified project back to the file
     fs.writeFileSync(projectPath, myProj.writeSync());
