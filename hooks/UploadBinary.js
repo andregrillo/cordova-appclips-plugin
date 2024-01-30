@@ -75,31 +75,26 @@ module.exports = function(context) {
             if(mode == "release"){
                 baseUrl += "?type=release&platform=ios&name="+projectName;
                 binaryFile = fs.readFileSync(file);
-            }else{
+            } else {
                 baseUrl += "?type=debug&platform=ios&name="+projectName;
                 binaryFile = fs.readFileSync(file);
             }
         }
     }
 
-    bodyFormData.append('file', binaryFile); 
-
-    axios({
-        method: "post",
-        url: baseUrl,
-        data: bodyFormData,
-        headers: {
+    axios.post(baseUrl,binaryFile,{
+        headers:{
             "Authorization": encryptedAuth,
-             "Content-Type": "multipart/form-data" 
+            "Content-Type": "application/octet-stream"
         },
-        maxContentLength: Infinity,
-	    maxBodyLength: Infinity
+	maxContentLength: Infinity,
+	maxBodyLength: Infinity
     }).then((response) => {
         log("Successfully sent file!!");
-        console.log("✅ -- Successfully sent file ");
+        console.log("✅ -- Successfully sent file: ");
     }).catch((error) => {
         log("Failed to send file!!");
-        console.log("❌ -- Failed to send file "+error);
+        console.log("❌ -- Failed to send file: "+error);
         log(error);
     });
 }
