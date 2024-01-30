@@ -18,7 +18,7 @@ function getProjectName() {
 
 function readProvisioningProfiles(projectRoot) {
     return new Promise((resolve, reject) => {
-        const filePath = path.join(projectRoot, 'provisioning-profiles.txt');
+        //const filePath = path.join(projectRoot, 'provisioning-profiles.txt');
         const filePath = path.join('./', 'provisioning-profiles.txt');
         console.log("💡 filePath: " + filePath);
         fs.readFile(filePath, 'utf8', (err, data) => {
