@@ -4,16 +4,21 @@ var fs = require('fs');
 var path = require('path');
 var et = require('elementtree'); 
 
-function getAppId(context) {
-  var config_xml = path.join(context.opts.projectRoot, 'config.xml');
-  var data = fs.readFileSync(config_xml).toString();
-  var etree = et.parse(data);
-  return etree.getroot().attrib.id;
+function getProjectName() {
+    var config = fs.readFileSync('config.xml').toString();
+    var parseString = require('xml2js').parseString;
+    var name;
+    parseString(config, function (err, result) {
+        name = result.widget.name.toString();
+        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        name = name.replace(r, '');
+    });
+    return name || null;
 }
 
 module.exports = function(context) {
     var rootdir = context.opts.projectRoot;
-    var configFilePath = path.join(rootdir, 'platforms/ios/', getAppId(context), 'config.xml');
+    var configFilePath = path.join(rootdir, 'platforms/ios/', getProjectName(), 'config.xml');
     console.log("💡configFilePath: " + configFilePath);
     const args = process.argv
 
