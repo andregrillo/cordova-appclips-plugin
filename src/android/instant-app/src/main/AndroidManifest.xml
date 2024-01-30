@@ -19,7 +19,7 @@
         android:exported="true"
         android:launchMode="singleTop"
         android:windowSoftInputMode="adjustResize"
-        tools:ignore="MissingApplicationIcon">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.test.instantapp.instant_app.InstantAppActivity"
             android:exported="true">
