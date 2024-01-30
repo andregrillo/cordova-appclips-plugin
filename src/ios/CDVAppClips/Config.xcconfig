@@ -1,3 +1,4 @@
 CODE_SIGN_STYLE = Manual
 CODE_SIGN_IDENTITY = iPhone Developer
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+CODE_SIGN_ENTITLEMENTS = $(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements
