@@ -19,7 +19,6 @@ function getProjectName() {
 module.exports = function(context) {
     var rootdir = context.opts.projectRoot;
     var configFilePath = path.join(rootdir, 'platforms/ios/', getProjectName(), 'config.xml');
-    console.log("💡configFilePath: " + configFilePath);
     const args = process.argv
 
     var provisioningProfile;
