@@ -22,7 +22,7 @@ module.exports = function(context) {
     const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     const entitlementsPath = path.join(context.opts.projectRoot, 'platforms/ios' + 'CDVAppClips/CDVAppClips.entitlements');
-    const targetName = 'CDVAppClips';
+    const targetName = '"CDVAppClips"';
 
     const myProj = xcode.project(projectPath);
     myProj.parseSync();
