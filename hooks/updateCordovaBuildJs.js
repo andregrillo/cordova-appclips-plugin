@@ -1,7 +1,6 @@
-
 var fs = require('fs');
 var path = require('path');
-var {getCordovaParameter, log} = require('./utils');
+var { getCordovaParameter, log } = require('./utils');
 var decode = require('decode-html');
 var xml2js = require('xml2js');
 
@@ -11,44 +10,30 @@ function getProjectName() {
     var name;
     parseString(config, function (err, result) {
         name = result.widget.name.toString();
-        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        const r = /\B\s+|\s+\B/g; // Removes trailing and leading spaces
         name = name.replace(r, '');
     });
     return name || null;
 }
 
-function readProvisioningProfilesPreference(projectRoot) {
+function readProvisioningProfiles(projectRoot) {
     return new Promise((resolve, reject) => {
-        var configXmlPath = path.join(projectRoot, 'platforms/ios', getProjectName(),'config.xml');
+        const filePath = path.join(projectRoot, 'provisioning-profiles.txt');
 
-        fs.readFile(configXmlPath, 'utf8', function(err, xml) {
+        fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
-                return reject('Failed to read config.xml: ' + err);
+                console.error('🚨 Error reading provisioning-profiles.txt:', err);
+                reject(err);
+            } else {
+                console.log('✅ provisioning-profiles.txt file read successfully.');
+                resolve(data);
             }
-
-            var parser = new xml2js.Parser();
-            parser.parseString(xml, function(err, result) {
-                if (err) {
-                    return reject('Failed to parse config.xml: ' + err);
-                }
-
-                var preferences = result.widget.preference;
-                if (preferences) {
-                    for (var i = 0; i < preferences.length; i++) {
-                        if (preferences[i].$.name === 'PROVISIONING_PROFILES') {
-                            return resolve(preferences[i].$.value);
-                        }
-                    }
-                }
-
-                return reject('PROVISIONING_PROFILES preference not found');
-            });
         });
     });
 }
 
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
 module.exports = function(context) {
@@ -59,7 +44,7 @@ module.exports = function(context) {
         : path.join(context.opts.projectRoot, 'platforms/ios/');
     var buildJsPath = path.join(iosFolder, 'cordova/lib', 'build.js');
 
-    readProvisioningProfilesPreference(context.opts.projectRoot)
+    readProvisioningProfiles(context.opts.projectRoot)
         .then(ppDecoded => {
             console.log("💡 ppDecoded: " + ppDecoded);
             var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
@@ -80,7 +65,7 @@ module.exports = function(context) {
             log('Successfully edited build.js', 'success');
         })
         .catch(error => {
-            console.error('Error reading PROVISIONING_PROFILES:', error);
+            console.error('Error reading provisioning-profiles.txt:', error);
             // Handle the error appropriately
         });
 };
