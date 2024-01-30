@@ -16,29 +16,19 @@ function getProjectName() {
 module.exports = function(context) {
     console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
-    const projectRoot = context.opts.projectRoot; // Adjust this path as needed
+    const projectRoot = context.opts.projectRoot; 
     const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     try {
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 
-        // Regular expression to identify build configuration sections for the CDVAppClips target
-        const regex = /isa = XCBuildConfiguration;[^}]*?PRODUCT_NAME = CDVAppClips;[^}]*?\};/g;
-
+        // The string to search for
+        const searchString = 'PRODUCT_NAME = CDVAppClips;';
         // Replacement string including the CODE_SIGN_ENTITLEMENTS
-        const entitlementString = '\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n';
+        const replacementString = 'PRODUCT_NAME = CDVAppClips;\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n';
 
-        // Function to add the entitlement string to the matched section
-        function addEntitlements(match) {
-            if (match.includes('CODE_SIGN_ENTITLEMENTS')) {
-                // If the line already exists, don't add it again
-                return match;
-            }
-            return match.replace(/(buildSettings = \{)/, `$1\n${entitlementString}`);
-        }
-
-        // Apply the modification
-        pbxprojContents = pbxprojContents.replace(regex, addEntitlements);
+        // Replace instances of the search string with the replacement string
+        pbxprojContents = pbxprojContents.split(searchString).join(replacementString);
 
         // Write the modified contents back to the file
         fs.writeFileSync(projectPath, pbxprojContents);
