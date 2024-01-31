@@ -23,42 +23,33 @@ module.exports = function(context) {
     console.log("👉 projectPath: \n" + projectPath);
 
     try {
-        // Read and parse the pp_team.json file
         const ppTeamContents = fs.readFileSync(ppTeamFilePath, 'utf8');
         console.log("👉 pp_team.json: \n" + ppTeamContents);
 
         const ppTeamJSON = JSON.parse(ppTeamContents);
-        console.log("👉 ppTeamJSON: \n" + ppTeamJSON);
+        console.log("👉 ppTeamJSON: \n" + JSON.stringify(ppTeamJSON, null, 4));
 
-        const args = process.argv;
-        var provisioningProfilesArg;
-        var teamId = ppTeamJSON.DEVELOPMENT_TEAM || '';
+        let teamId = ppTeamJSON.DEVELOPMENT_TEAM || '';
+        let provProf = '';
 
-        for (const arg of args) {
-            if (arg.includes('PROVISIONING_PROFILES')) {
-                console.log("👉 arg: \n" + arg);
-                provisioningProfilesArg = arg.split('=')[1];
-                break;
-            }
-        }
-
-        var provProf = '';
-        if (provisioningProfilesArg) {
+        if (ppTeamJSON.PROVISIONING_PROFILES) {
             try {
-                const provisioningProfiles = JSON.parse(provisioningProfilesArg);
-
-                // Extract the first value from the provisioningProfiles object
+                // The value of PROVISIONING_PROFILES is a string representation of a JSON object.
+                // Replace single quotes with double quotes for valid JSON format and parse it.
+                const provisioningProfiles = JSON.parse(ppTeamJSON.PROVISIONING_PROFILES.replace(/'/g, '"'));
                 const keys = Object.keys(provisioningProfiles);
                 console.log("👉 keys: \n" + keys);
                 if (keys.length > 0) {
                     provProf = provisioningProfiles[keys[0]];
                     console.log("👉 provProf: \n" + provProf);
                 } else {
-                    console.log("👉 provProf is null: \n" + provProf);
+                    console.log("👉 provProf is null");
                 }
             } catch (e) {
-                console.error('🚨 Error parsing PROVISIONING_PROFILES:', e);
+                console.error('🚨 Error parsing PROVISIONING_PROFILES from pp_team.json:', e);
             }
+        } else {
+            console.log("👉 PROVISIONING_PROFILES not found in pp_team.json");
         }
 
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
@@ -81,6 +72,6 @@ module.exports = function(context) {
             console.log('⚠️ String not found. No changes made to project.pbxproj.');
         }
     } catch (error) {
-        console.error('🚨 Error updating project.pbxproj:', error);
+        console.error('🚨 Error:', error);
     }
 };
