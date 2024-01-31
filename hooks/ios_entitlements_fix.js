@@ -17,26 +17,19 @@ module.exports = function(context) {
     console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
     const projectRoot = context.opts.projectRoot; 
+    const ppTeamFilePath = path.join(projectRoot, 'pp_team.json');
     const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
     try {
+        // Read and parse the pp_team.json file
+        const ppTeamContents = fs.readFileSync(ppTeamFilePath, 'utf8');
+        const ppTeamJSON = JSON.parse(ppTeamContents);
+
+        // Extract provisioningProfile and teamId
+        var provProf = ppTeamJSON.PROVISIONING_PROFILES || '';
+        var teamId = ppTeamJSON.DEVELOPMENT_TEAM || '';
+        
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
-
-        const args = process.argv
-
-        var provProf;
-        var teamId;
-        for (const arg of args) {  
-          if (arg.includes('PROVISIONING_PROFILES')){
-            var stringArray = arg.split("=");
-            provProf = stringArray.slice(-1).pop();
-          }
-
-          if (arg.includes('DEVELOPMENT_TEAM')){
-            var stringArray = arg.split("=");
-            teamId = stringArray.slice(-1).pop();
-          }
-        }
 
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
