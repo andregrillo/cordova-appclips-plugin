@@ -25,7 +25,7 @@ module.exports = function(context) {
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
         // Replacement string including the CODE_SIGN_ENTITLEMENTS
-        const replacementString = 'productName = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";';
+        const replacementString = 'PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";';
 
         // Check if the string exists in the file
         if (pbxprojContents.includes(searchString)) {
