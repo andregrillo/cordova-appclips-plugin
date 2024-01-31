@@ -39,7 +39,7 @@ module.exports = function(context) {
       }
     }
 
-    const args = process.argv
+    //const args = process.argv
 
     var DEVELOPMENT_TEAM;
     for (const arg of args) {  
