@@ -39,6 +39,16 @@ module.exports = function(context) {
       }
     }
 
+    const args = process.argv
+
+    var DEVELOPMENT_TEAM;
+    for (const arg of args) {  
+      if (arg.includes('DEVELOPMENT_TEAM')){
+        var stringArray = arg.split("=");
+        DEVELOPMENT_TEAM = stringArray.slice(-1).pop();
+      }
+    }
+
     var ppObject = JSON.parse(ppDecoded.replace(/'/g, "\""));
 
     //we don't iterate the provisioning profiles here because we don't know  
@@ -49,7 +59,7 @@ module.exports = function(context) {
 
     var xcConfigNewContents = 'PRODUCT_BUNDLE_IDENTIFIER=' + key + '\n'
                             + 'PROVISIONING_PROFILE=' + value + '\n'
-                            + 'DEVELOPMENT_TEAM=' + getCordovaParameter("DEVELOPMENT_TEAM",contents) + "\n"
+                            + 'DEVELOPMENT_TEAM=' + DEVELOPMENT_TEAM + "\n"
                             + 'PRODUCT_DISPLAY_NAME=' + getCordovaParameter("WIDGET_TITLE",contents)
 
     
