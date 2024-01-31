@@ -18,7 +18,9 @@ module.exports = function(context) {
 
     const projectRoot = context.opts.projectRoot;
     const ppTeamFilePath = path.join(projectRoot, 'pp_team.json');
+    console.log("👉 ppTeamFilePath: \n" + ppTeamFilePath);
     const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
+    console.log("👉 projectPath: \n" + projectPath);
 
     try {
         // Read and parse the pp_team.json file
