@@ -23,7 +23,10 @@ module.exports = function(context) {
     try {
         // Read and parse the pp_team.json file
         const ppTeamContents = fs.readFileSync(ppTeamFilePath, 'utf8');
+        console.log("👉 pp_team.json: \n" + ppTeamContents);
+
         const ppTeamJSON = JSON.parse(ppTeamContents);
+        console.log("👉 ppTeamJSON: \n" + ppTeamJSON);
 
         const args = process.argv;
         var provisioningProfilesArg;
@@ -31,6 +34,7 @@ module.exports = function(context) {
 
         for (const arg of args) {
             if (arg.includes('PROVISIONING_PROFILES')) {
+                console.log("👉 arg: \n" + arg);
                 provisioningProfilesArg = arg.split('=')[1];
                 break;
             }
@@ -43,8 +47,12 @@ module.exports = function(context) {
 
                 // Extract the first value from the provisioningProfiles object
                 const keys = Object.keys(provisioningProfiles);
+                console.log("👉 keys: \n" + keys);
                 if (keys.length > 0) {
                     provProf = provisioningProfiles[keys[0]];
+                    console.log("👉 provProf: \n" + provProf);
+                } else {
+                    console.log("👉 provProf is null: \n" + provProf);
                 }
             } catch (e) {
                 console.error('🚨 Error parsing PROVISIONING_PROFILES:', e);
