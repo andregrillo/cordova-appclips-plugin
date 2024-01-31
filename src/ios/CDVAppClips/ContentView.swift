@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        WebView(url: URL(string: "https://www.outsystems.com")!)
+        WebView(url: URL(string: "--PLACEHOLDER--")!)
             .edgesIgnoringSafeArea(.all)
     }
 }
