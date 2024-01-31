@@ -18,16 +18,12 @@ module.exports = function(context) {
 
     const projectRoot = context.opts.projectRoot;
     const ppTeamFilePath = path.join(projectRoot, 'pp_team.json');
-    console.log("👉 ppTeamFilePath: \n" + ppTeamFilePath);
     const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
-    console.log("👉 projectPath: \n" + projectPath);
 
     try {
         const ppTeamContents = fs.readFileSync(ppTeamFilePath, 'utf8');
-        console.log("👉 pp_team.json: \n" + ppTeamContents);
 
         const ppTeamJSON = JSON.parse(ppTeamContents);
-        console.log("👉 ppTeamJSON: \n" + JSON.stringify(ppTeamJSON, null, 4));
 
         let teamId = ppTeamJSON.DEVELOPMENT_TEAM || '';
         let provProf = '';
@@ -38,12 +34,9 @@ module.exports = function(context) {
                 // Replace single quotes with double quotes for valid JSON format and parse it.
                 const provisioningProfiles = JSON.parse(ppTeamJSON.PROVISIONING_PROFILES.replace(/'/g, '"'));
                 const keys = Object.keys(provisioningProfiles);
-                console.log("👉 keys: \n" + keys);
                 if (keys.length > 0) {
                     provProf = provisioningProfiles[keys[0]];
-                    console.log("👉 provProf: \n" + provProf);
                 } else {
-                    console.log("👉 provProf is null");
                 }
             } catch (e) {
                 console.error('🚨 Error parsing PROVISIONING_PROFILES from pp_team.json:', e);
@@ -56,7 +49,6 @@ module.exports = function(context) {
 
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
-        // Replacement string including the CODE_SIGN_ENTITLEMENTS
         const replacementString = `PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ${teamId} ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ${provProf};`;
 
         // Check if the string exists in the file

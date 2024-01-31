@@ -22,8 +22,6 @@ module.exports = function (context) {
     var xml = fs.readFileSync(appClipPlistPath, 'utf8');
     var obj = plist.parse(xml);
 
-    //obj.WebViewUrl =  getCordovaParameter("WEBVIEW_URL",contents);
-
     xml = plist.build(obj);
     fs.writeFileSync(appClipPlistPath, xml, { encoding: 'utf8' });
 }

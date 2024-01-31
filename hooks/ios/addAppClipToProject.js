@@ -36,10 +36,6 @@ module.exports = function (context) {
     'utf-8'
   );
 
-  // Get the plugin variables from the parameters or the config file
-  //TROCAR PELO APP ID INTEIRO DO APP CLIP?
-
-
   const args = process.argv
 
   var AppClipAppId;
@@ -49,24 +45,16 @@ module.exports = function (context) {
       AppClipAppId = stringArray.slice(-1).pop();
     }
   }
-  //var AppClipAppId = getCordovaParameter("APPCLIP_APP_ID", contents);
-  log('➡️ Your App Clip App id will be: ' + AppClipAppId, 'info');
-
+  
   var ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = getCordovaParameter("ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", contents);
 
   if (contents) {
     contents = contents.substring(contents.indexOf('<'));
   }
 
-  // Get the bundle-id from config.xml
-  //var etree = elementTree.parse(contents);
-  //var bundleId = etree.getroot().get('id');
-  //log('➡️ Bundle id of your host app: ' + bundleId, 'info');
-
   var iosFolder = context.opts.cordova.project
     ? context.opts.cordova.project.root
     : path.join(context.opts.projectRoot, 'platforms/ios/');
-  log('➡️ Folder containing your iOS project: ' + iosFolder, 'info');
 
   fs.readdir(iosFolder, function (err, data) {
     var projectFolder;
@@ -106,7 +94,6 @@ module.exports = function (context) {
       var entitlementsFileName;
       var projectPlistPath = path.join(iosFolder, projectName, projectName + '-Info.plist');
       var projectPlistJson = plist.parse(fs.readFileSync(projectPlistPath, 'utf8'));
-      //ACHO QUE O PLACEHOLDERVALUES É O PLIST DO TARGET DAS APPCLIPS!
       var placeHolderValues = [
         {
           placeHolder: '__DISPLAY_NAME__',
@@ -116,7 +103,6 @@ module.exports = function (context) {
           placeHolder: '__APP_IDENTIFIER__',
           value: projectPlistJson['CFBundleIdentifier']
         },
-        //NÃO QUERO SUFIXO! QUERO O NOME DA APP CLIP INTEIRO!!
         {
           placeHolder: '__BUNDLE_SUFFIX__',
           value: appClipName

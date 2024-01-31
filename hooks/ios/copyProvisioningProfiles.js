@@ -100,14 +100,7 @@ module.exports = function(context) {
         'error'
       );
     }
-
-    /*var targetFolder = path.join(
-      '/Users',
-      require("os").userInfo().username,
-      'Library/MobileDevice/Provisioning Profiles'
-    )
-    console.log("target folder", targetFolder);*/
-    
+  
     var targetFolder = path.join(
       require("os").homedir(),
       'Library/MobileDevice/Provisioning\ Profiles'
@@ -117,17 +110,12 @@ module.exports = function(context) {
       var ppFolder = path.join(
       require("os").homedir(),
       'Library/MobileDevice');
-      console.log("⭐️⭐️⭐️ Listing Folder contents:\n");
-      listDirectoryContents(ppFolder);
-      console.log("⭐️⭐️⭐️ End of folder contents\n")
+
       console.log(`Creating dir ${targetFolder}`);
-        fs.mkdirSync(targetFolder);
+      fs.mkdirSync(targetFolder);
     }else{
       console.log(`Dir ${targetFolder} already exists`);
     }
-
-    console.log("➡️ srcFolder: " + srcFolder);
-    console.log("➡️ targetFolder: " + targetFolder);
 
     // Copy provisioning profiles
     copyFolderRecursiveSync(

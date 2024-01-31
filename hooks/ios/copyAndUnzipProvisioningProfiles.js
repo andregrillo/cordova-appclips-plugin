@@ -16,7 +16,7 @@ var {
 } = require("./utils");
 
 var constants = {
-  osTargetFolder: "provisioning-profiles" //OS target-directory
+  osTargetFolder: "provisioning-profiles"
 };
 
 module.exports = function(context) {
@@ -53,10 +53,7 @@ module.exports = function(context) {
     var targetPath = path.join(wwwPath, constants.osTargetFolder);
     zip.extractAllTo(targetPath, true);
 
-    //console.log("➡️ targetPath: ", targetPath)
-
     var files = getFilesFromPath(targetPath);
-    //console.log("➡️ files: ", files);
     if (!files) {
         tils.log("🚨 No directory found: ", "error")
         defer.reject();
@@ -74,10 +71,6 @@ module.exports = function(context) {
     var destFolderPath = path.join(context.opts.plugin.dir, constants.osTargetFolder);
     var destFilePath = path.join(context.opts.plugin.dir, constants.osTargetFolder, fileName);
 
-    //console.log("▶️ sourceFilePath: ", sourceFilePath);
-    //console.log("▶️ destFolderPath: ", destFolderPath);
-    //console.log("▶️ destFilePath: ", destFilePath);
-
     // Create the directory if it does not exist
     fs.mkdir(destFolderPath, { recursive: false }, (error) => {
       if (error) {
@@ -91,7 +84,6 @@ module.exports = function(context) {
 
     var destPath = path.join(context.opts.projectRoot, "platforms", platform, "app");
     if (checkIfFolderExists(destPath)) {
-        console.log("⚠️ antes");
         var destFilePath = path.join(destPath, fileName);
         copyFromSourceToDestPath(defer, sourceFilePath, destFilePath);
     }

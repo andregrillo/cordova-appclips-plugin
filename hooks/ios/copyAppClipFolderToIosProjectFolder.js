@@ -78,7 +78,6 @@ module.exports = function(context) {
 
     // Get the app clip name and location from the parameters or the config file
     var appClipName = Config.EXT_NAME;
-    //console.log("⚠️ appClipName: " + appClipName);
 
     srcFolder = path.join(
       context.opts.plugin.dir,
