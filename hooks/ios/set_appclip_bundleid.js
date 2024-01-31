@@ -27,24 +27,15 @@ module.exports = function(context) {
             }
         }
 
-        if (!appClipAppId) {
-            reject('🚨 APPCLIP_APP_ID not found.');
+        if (!appClipAppId || !mainAppId || !appClipURL) {
+            reject('🚨 Missing required information.');
             return;
         }
 
-        if (!mainAppId) {
-            reject('🚨 PRODUCT_BUNDLE_IDENTIFIER not found.');
-            return;
-        }
-        if (!appClipURL) {
-            reject('🚨 APP_INSTANT_CLIPS_URL not found.');
-            return;
-        }
-
-        // Read the contents of the plist file
+        // Read and update the plist file
         fs.readFile(plistPath, 'utf8', (err, data) => {
             if (err) {
-                reject('✅ Error reading plist file: ' + err);
+                reject('🚨 Error reading plist file: ' + err);
                 return;
             }
 
@@ -55,53 +46,45 @@ module.exports = function(context) {
             fs.writeFile(plistPath, modifiedData, 'utf8', (err) => {
                 if (err) {
                     reject('🚨 Error writing to plist file: ' + err);
-                    return;
+                } else {
+                    // Read and update the entitlements file
+                    fs.readFile(entitlementsPath, 'utf8', (err, data) => {
+                        if (err) {
+                            reject('🚨 Error reading entitlements file: ' + err);
+                            return;
+                        }
+
+                        // Replace the placeholder with the mainAppId
+                        const modifiedData = data.replace('--PLACEHOLDER--', mainAppId);
+
+                        // Write the modified content back to the file
+                        fs.writeFile(entitlementsPath, modifiedData, 'utf8', (err) => {
+                            if (err) {
+                                reject('🚨 Error writing to entitlements file: ' + err);
+                            } else {
+                                // Read and update the contentview file
+                                fs.readFile(contentViewPath, 'utf8', (err, data) => {
+                                    if (err) {
+                                        reject('🚨 Error reading contentview file: ' + err);
+                                        return;
+                                    }
+
+                                    // Replace the placeholder with the appClipURL
+                                    const modifiedData = data.replace('--PLACEHOLDER--', appClipURL);
+
+                                    // Write the modified content back to the file
+                                    fs.writeFile(contentViewPath, modifiedData, 'utf8', (err) => {
+                                        if (err) {
+                                            reject('🚨 Error writing to contentview file: ' + err);
+                                        } else {
+                                            resolve('✅ All files updated successfully.');
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
                 }
-
-                resolve('✅ Plist file updated successfully.');
-            });
-        });
-
-
-        // Read the contents of the entitlements file
-        fs.readFile(entitlementsPath, 'utf8', (err, data) => {
-            if (err) {
-                reject('✅ Error reading entitlements file: ' + err);
-                return;
-            }
-
-            // Replace the placeholder with the mainAppId
-            const modifiedData = data.replace('--PLACEHOLDER--', mainAppId);
-
-            // Write the modified content back to the file
-            fs.writeFile(entitlementsPath, modifiedData, 'utf8', (err) => {
-                if (err) {
-                    reject('🚨 Error writing to entitlements file: ' + err);
-                    return;
-                }
-
-                resolve('✅ Plist file updated successfully.');
-            });
-        });
-
-        // Read the contents of the contentview file
-        fs.readFile(contentViewPath, 'utf8', (err, data) => {
-            if (err) {
-                reject('✅ Error reading contentview file: ' + err);
-                return;
-            }
-
-            // Replace the placeholder with the appClipAppId
-            const modifiedData = data.replace('--PLACEHOLDER--', appClipURL);
-
-            // Write the modified content back to the file
-            fs.writeFile(contentViewPath, modifiedData, 'utf8', (err) => {
-                if (err) {
-                    reject('🚨 Error writing to contentview file: ' + err);
-                    return;
-                }
-
-                resolve('✅ Plist contentview updated successfully.');
             });
         });
     });
