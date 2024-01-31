@@ -22,10 +22,26 @@ module.exports = function(context) {
     try {
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 
+        const args = process.argv
+
+        var provProf;
+        var teamId;
+        for (const arg of args) {  
+          if (arg.includes('PROVISIONING_PROFILES')){
+            var stringArray = arg.split("=");
+            provProf = stringArray.slice(-1).pop();
+          }
+
+          if (arg.includes('DEVELOPMENT_TEAM')){
+            var stringArray = arg.split("=");
+            teamId = stringArray.slice(-1).pop();
+          }
+        }
+
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
         // Replacement string including the CODE_SIGN_ENTITLEMENTS
-        const replacementString = 'PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";';
+        const replacementString = 'PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ' + teamId + ' ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ' + provProf + ';';
 
         // Check if the string exists in the file
         if (pbxprojContents.includes(searchString)) {
