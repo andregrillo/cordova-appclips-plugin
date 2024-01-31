@@ -7,7 +7,7 @@ function getProjectName() {
     var name;
     parseString(config, function (err, result) {
         name = result.widget.name.toString();
-        const r = /\B\s+|\s+\B/g;  //Removes trailing and leading spaces
+        const r = /\B\s+|\s+\B/g; // Removes trailing and leading spaces
         name = name.replace(r, '');
     });
     return name || null;
@@ -16,7 +16,7 @@ function getProjectName() {
 module.exports = function(context) {
     console.log('💡 Updating project.pbxproj for CDVAppClips target 💡');
 
-    const projectRoot = context.opts.projectRoot; 
+    const projectRoot = context.opts.projectRoot;
     const ppTeamFilePath = path.join(projectRoot, 'pp_team.json');
     const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
 
@@ -25,16 +25,38 @@ module.exports = function(context) {
         const ppTeamContents = fs.readFileSync(ppTeamFilePath, 'utf8');
         const ppTeamJSON = JSON.parse(ppTeamContents);
 
-        // Extract provisioningProfile and teamId
-        var provProf = ppTeamJSON.PROVISIONING_PROFILES || '';
+        const args = process.argv;
+        var provisioningProfilesArg;
         var teamId = ppTeamJSON.DEVELOPMENT_TEAM || '';
-        
+
+        for (const arg of args) {
+            if (arg.includes('PROVISIONING_PROFILES')) {
+                provisioningProfilesArg = arg.split('=')[1];
+                break;
+            }
+        }
+
+        var provProf = '';
+        if (provisioningProfilesArg) {
+            try {
+                const provisioningProfiles = JSON.parse(provisioningProfilesArg);
+
+                // Extract the first value from the provisioningProfiles object
+                const keys = Object.keys(provisioningProfiles);
+                if (keys.length > 0) {
+                    provProf = provisioningProfiles[keys[0]];
+                }
+            } catch (e) {
+                console.error('🚨 Error parsing PROVISIONING_PROFILES:', e);
+            }
+        }
+
         let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
         // Replacement string including the CODE_SIGN_ENTITLEMENTS
-        const replacementString = 'PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ' + teamId + ' ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ' + provProf + ';';
+        const replacementString = `PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ${teamId} ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ${provProf};`;
 
         // Check if the string exists in the file
         if (pbxprojContents.includes(searchString)) {
