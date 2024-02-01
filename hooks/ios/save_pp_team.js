@@ -9,6 +9,7 @@ module.exports = function(context) {
 
         var provisioningProfile;
         var teamId;
+        var appClipName;
 
         for (const arg of args) {  
           if (arg.includes('PROVISIONING_PROFILES')){
@@ -16,16 +17,22 @@ module.exports = function(context) {
             provisioningProfile = stringArray.slice(-1).pop();
           }
 
-          if (arg.includes('DEVELOPMENT_TEAM')){
+          else if (arg.includes('DEVELOPMENT_TEAM')){
             var stringArray = arg.split("=");
             teamId = stringArray.slice(-1).pop();
+          }
+
+          else if (arg.includes('WIDGET_TITLE')){
+            var stringArray = arg.split("=");
+            appClipName = stringArray.slice(-1).pop();
           }
         }
 
         // Creating a JSON object with uppercase keys
         const jsonObject = {
             PROVISIONING_PROFILES: provisioningProfile,
-            DEVELOPMENT_TEAM: teamId
+            DEVELOPMENT_TEAM: teamId,
+            WIDGET_TITLE: appClipName
         };
 
         // Convert JSON object to string
