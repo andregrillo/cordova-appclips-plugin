@@ -6,8 +6,8 @@ module.exports = function(context) {
         const rootDir = context.opts.projectRoot; 
         const plistPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/CDVAppClips-Info.plist');
         const entitlementsPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/CDVAppClips.entitlements');
-        //const contentViewPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/ContentView.swift');
-        const contentViewPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/WVViewController.m');
+        const contentViewPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/ContentView.swift');
+        //const contentViewPath = path.join(rootDir, 'plugins/cordova.appclips.plugin/src/ios/CDVAppClips/WVViewController.m');
         const args = process.argv;
 
         var mainAppId;
@@ -64,7 +64,6 @@ module.exports = function(context) {
                                 reject('🚨 Error writing to entitlements file: ' + err);
                             } else {
                                 // Read and update the contentview file
-                                //fs.readFile(contentViewPath, 'utf8', (err, data) => {
                                 fs.readFile(contentViewPath, 'utf8', (err, data) => {
                                     if (err) {
                                         reject('🚨 Error reading contentview file: ' + err);
