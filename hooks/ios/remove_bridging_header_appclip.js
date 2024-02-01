@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-const xcode = require('xcode'),
+const xcode = require('xcode')
 
 function getProjectName() {
     var config = fs.readFileSync('config.xml').toString();
