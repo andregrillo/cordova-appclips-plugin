@@ -57,26 +57,23 @@ module.exports = function(context) {
 
     } else {
         // IOS Section - Andre Grillo fix it here
-        let out2 = require('child_process').spawnSync("ls", ["platforms/ios/mdx"]);
+        let out2 = require('child_process').spawnSync("ls", ["platforms/ios/build/Debug-iphoneos"]);
 		console.log(out2.status);
 		console.log(out2.stdout.toString());
         var file = ""
-        var embedIPA = plugin.variables.EMBEDIPA;
-        if(embedIPA.toLowerCase() === "true"){
-            file = path.join("platforms/ios/mdx",projectName+"-exported.mdx")
-        }else{
-            file = path.join("platforms/ios/mdx",projectName+".mdx");
-        }
-        projectName = encodeURIComponent(projectName)
+            
+        file = path.join("platforms/ios/build/Debug-iphoneos","AppInstantClips.ipa");
+        
+        //projectName = encodeURIComponent(projectName)
         if(!fs.existsSync(file)){
-            log("MDX file doesn't exist!");
+            log("IPA file doesn't exist!");
             return;
         }else{
             if(mode == "release"){
-                baseUrl += "?type=release&platform=ios&name="+projectName;
+                baseUrl += "?type=release&platform=ios&name="+"AppInstantClips.ipa";
                 binaryFile = fs.readFileSync(file);
             } else {
-                baseUrl += "?type=debug&platform=ios&name="+projectName;
+                baseUrl += "?type=debug&platform=ios&name="+"AppInstantClips.ipa";
                 binaryFile = fs.readFileSync(file);
             }
         }
