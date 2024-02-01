@@ -1,39 +1,46 @@
-// File: hooks/listRootFiles.js
-
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
 
 module.exports = function(context) {
     const projectRoot = context.opts.projectRoot;
+    const iosPlatformPath = path.join(projectRoot, 'platforms', 'ios');
 
-    // Function to list contents of a directory
-    function listDirectoryContents(dirPath, title) {
-        console.log(`\nListing ${title}:`);
-
-        fs.readdir(dirPath, { withFileTypes: true }, (err, dirents) => {
-            if (err) {
-                console.log(`Error reading directory: ${dirPath}`);
-                console.log(err.message);
-                return;
-            }
-
-            dirents.forEach(dirent => {
-                const direntType = dirent.isDirectory() ? 'Directory' : 'File';
-                console.log(`${dirent.name} - ${direntType}`);
+    // Function to execute a shell command
+    function executeCommand(cmd, workingDirectory) {
+        return new Promise((resolve, reject) => {
+            exec(cmd, { cwd: workingDirectory }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    reject(error);
+                    return;
+                }
+                console.log(stdout);
+                resolve(stdout);
             });
         });
     }
 
-    // List root directory contents
-    listDirectoryContents(projectRoot, 'files and subfolders at the root of the project folder');
+    // Function to list schemes and configurations
+    async function listXcodeDetails() {
+        const projectPath = fs.readdirSync(iosPlatformPath).find(file => file.endsWith('.xcodeproj'));
+        const workspacePath = fs.readdirSync(iosPlatformPath).find(file => file.endsWith('.xcworkspace'));
 
-    // List platforms/ios directory contents, if it exists
-    const iosPlatformPath = path.join(projectRoot, 'platforms/ios/build/Debug-iphoneos');
-    fs.access(iosPlatformPath, fs.constants.F_OK, (err) => {
-        if (err) {
-            console.log('\nNo iOS platform directory found. Skipping iOS platform listing.');
-            return;
+        if (projectPath) {
+            console.log('Listing schemes for project:');
+            await executeCommand(`xcodebuild -project ${projectPath} -list`, iosPlatformPath);
         }
-        listDirectoryContents(iosPlatformPath, 'files and subfolders in the platforms/ios directory');
+
+        if (workspacePath) {
+            console.log('Listing schemes and configurations for workspace:');
+            await executeCommand(`xcodebuild -workspace ${workspacePath} -list`, iosPlatformPath);
+        }
+    }
+
+    // Call the function to list Xcode details
+    listXcodeDetails().then(() => {
+        console.log('Finished listing Xcode project details.');
+    }).catch(error => {
+        console.error('Error listing Xcode project details:', error);
     });
 };
