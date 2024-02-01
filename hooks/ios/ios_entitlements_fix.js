@@ -50,7 +50,7 @@ module.exports = function(context) {
 
         // The string to search for
         const searchString = 'PRODUCT_NAME = "CDVAppClips";';
-        const replacementString = `PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ${teamId} ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ${provProf};\n\t\t\t\tPRODUCT_DISPLAY_NAME = ${appClipName};`;
+        const replacementString = `PRODUCT_NAME = "CDVAppClips";\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/CDVAppClips/CDVAppClips.entitlements";\n\t\t\t\t"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ${teamId} ;\n\t\t\t\t"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = ${provProf};\n\t\t\t\tPRODUCT_DISPLAY_NAME = "${appClipName}";`;
 
         // Check if the string exists in the file
         if (pbxprojContents.includes(searchString)) {
