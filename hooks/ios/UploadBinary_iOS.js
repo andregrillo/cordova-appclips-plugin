@@ -2,7 +2,7 @@ var axios;
 var base64;
 const path = require("path")
 const fs = require('fs');
-const common = require('../hooks/common');
+const common = require('./common');
 const log = common.log;
 
 module.exports = function(context) {
