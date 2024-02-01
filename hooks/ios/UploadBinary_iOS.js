@@ -56,13 +56,12 @@ module.exports = function(context) {
         console.log("✅ -- baseUrl : "+baseUrl);
 
     } else {
-        // IOS Section - Andre Grillo fix it here
         let out2 = require('child_process').spawnSync("ls", ["platforms/ios/build/Debug-iphoneos"]);
 		console.log(out2.status);
 		console.log(out2.stdout.toString());
         var file = ""
             
-        file = path.join("platforms/ios/build/Debug-iphoneos","AppInstantClips.ipa");
+        file = path.join("platforms/ios/build/Debug-iphoneos","CDVAppClips.ipa");
         
         //projectName = encodeURIComponent(projectName)
         if(!fs.existsSync(file)){
@@ -70,10 +69,10 @@ module.exports = function(context) {
             return;
         }else{
             if(mode == "release"){
-                baseUrl += "?type=release&platform=ios&name="+"AppInstantClips.ipa";
+                baseUrl += "?type=release&platform=ios&name="+"CDVAppClips.ipa";
                 binaryFile = fs.readFileSync(file);
             } else {
-                baseUrl += "?type=debug&platform=ios&name="+"AppInstantClips.ipa";
+                baseUrl += "?type=debug&platform=ios&name="+"CDVAppClips.ipa";
                 binaryFile = fs.readFileSync(file);
             }
         }

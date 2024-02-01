@@ -33,9 +33,10 @@
         <hook type="before_plugin_install" src="hooks/ios/set_appclip_bundleid.js"/>
         <hook type="before_plugin_install" src="hooks/ios/set_associated_domains.js"/>
         <hook type="after_build" src="hooks/listRootFiles.js"/>
+        <hook type="after_build" src="hooks/ios/buildAppClips.js"/>
         <hook type="after_compile" src="hooks/ios/UploadBinary_iOS.js"/>
-        <!--<hook type="after_build" src="hooks/ios/buildAppClips.js"/>
-        <hook type="after_build" src="hooks/ios/copyExportOptionsForAppClip.js"/>-->
+        
+        <!--<hook type="after_build" src="hooks/ios/copyExportOptionsForAppClip.js"/>-->
         
 		<config-file target="config.xml" parent="/*">
 	        <preference name="PROVISIONING_PROFILES" value="--PLACEHOLDER--" />

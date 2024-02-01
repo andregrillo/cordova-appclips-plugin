@@ -1,4 +1,4 @@
-const { exec, copyFile } = require('child_process');
+const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,7 +8,7 @@ module.exports = function(context) {
         
         const iosPlatformPath = path.join(context.opts.projectRoot, 'platforms', 'ios');
         const sourcePath = path.join(context.opts.projectRoot, 'plugins', 'cordova.appclips.plugin', 'src/ios', 'exportOptionsAppClip.plist');
-        const destinationPath = path.join(iosPlatformPath, 'exportOptions.plist');
+        const destinationPath = path.join(iosPlatformPath, 'exportOptionsAppClip.plist'); // Different filename
 
         // Step 0: Copy the correct exportOptions.plist for App Clips
         console.log(`Copying exportOptions.plist for App Clips from ${sourcePath} to ${destinationPath}...`);
