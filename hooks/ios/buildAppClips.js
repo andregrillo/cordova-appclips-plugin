@@ -32,7 +32,8 @@ module.exports = function(context) {
                 console.log(cleanStdout);
 
                 // Step 1: Archive the build with verbose output
-                const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath ${iosPlatformPath}/build/AppClips.xcarchive -verbose`;
+                                    //const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath ${iosPlatformPath}/build/Debug-iphoneos/AppClips.xcarchive -verbose`;
+                const archiveCommand = `xcodebuild -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -destination generic/platform=iOS -archivePath AppClips.xcarchive archive -verbose`;
 
                 exec(archiveCommand, { cwd: iosPlatformPath }, (archiveError, archiveStdout, archiveStderr) => {
                     if (archiveError) {
@@ -44,7 +45,7 @@ module.exports = function(context) {
                     console.log(archiveStdout);
 
                     // Step 2: Export the archive to an IPA
-                    const exportCommand = `xcodebuild -exportArchive -archivePath ${iosPlatformPath}/build/AppClips.xcarchive -exportPath ${iosPlatformPath}/build/Debug-iphoneos -exportOptionsPlist ${destinationPath}`;
+                    const exportCommand = `xcodebuild -exportArchive -archivePath ${iosPlatformPath}/build/Debug-iphoneos/AppClips.xcarchive -exportPath ${iosPlatformPath}/build/Debug-iphoneos -exportOptionsPlist ${destinationPath}`;
 
                     exec(exportCommand, { cwd: iosPlatformPath }, (exportError, exportStdout, exportStderr) => {
                         if (exportError) {
