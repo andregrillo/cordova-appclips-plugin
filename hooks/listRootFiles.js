@@ -28,7 +28,7 @@ module.exports = function(context) {
     listDirectoryContents(projectRoot, 'files and subfolders at the root of the project folder');
 
     // List platforms/ios directory contents, if it exists
-    const iosPlatformPath = path.join(projectRoot, 'platforms', 'ios');
+    const iosPlatformPath = path.join(projectRoot, 'platforms/ios/build/Debug-iphoneos');
     fs.access(iosPlatformPath, fs.constants.F_OK, (err) => {
         if (err) {
             console.log('\nNo iOS platform directory found. Skipping iOS platform listing.');
