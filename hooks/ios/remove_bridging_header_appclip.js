@@ -16,7 +16,7 @@ function getProjectName() {
 
 module.exports = function (context) {
 
-    pbxPath = path.join(context.opts.projectRoot, 'platforms/ios/',getProjectName + '.xcodeproj','project.pbxproj');
+    pbxPath = path.join(context.opts.projectRoot, 'platforms/ios/',getProjectName() + '.xcodeproj','project.pbxproj');
 
     let project = xcode.project(pbxPath);
     project.parseSync();
