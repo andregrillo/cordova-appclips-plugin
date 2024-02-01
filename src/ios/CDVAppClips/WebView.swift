@@ -13,6 +13,14 @@ struct WebView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
+
+        // Adjust content insets to remove white space at the top
+        webView.scrollView.contentInset = UIEdgeInsets(top: -UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+        webView.scrollView.scrollIndicatorInsets = UIEdgeInsets(top: -UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+        
+        // Disable bouncing
+        webView.scrollView.bounces = false
+        
         webView.scrollView.isScrollEnabled = true // Enable scrolling in WebView
         return webView
     }
