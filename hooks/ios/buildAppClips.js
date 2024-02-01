@@ -5,10 +5,10 @@ const path = require('path');
 module.exports = function(context) {
     return new Promise((resolve, reject) => {
         console.log('Starting to build the CDVAppClips target...');
-        
+
         const iosPlatformPath = path.join(context.opts.projectRoot, 'platforms', 'ios');
         const sourcePath = path.join(context.opts.projectRoot, 'plugins', 'cordova.appclips.plugin', 'src/ios', 'exportOptionsAppClip.plist');
-        const destinationPath = path.join(iosPlatformPath, 'exportOptionsAppClip.plist'); // Different filename
+        const destinationPath = path.join(iosPlatformPath, 'exportOptionsAppClip.plist');
 
         // Step 0: Copy the correct exportOptions.plist for App Clips
         console.log(`Copying exportOptions.plist for App Clips from ${sourcePath} to ${destinationPath}...`);
@@ -20,18 +20,19 @@ module.exports = function(context) {
             }
             console.log('Successfully copied exportOptions.plist for App Clips.');
 
-            // Verify the contents of the copied plist file
-            console.log('⭐️ Verifying the contents of the copied exportOptions.plist...');
-            fs.readFile(destinationPath, 'utf8', (readError, data) => {
-                if (readError) {
-                    console.error(`Error reading exportOptions.plist: ${readError}`);
-                    reject(readError);
+            // Clean the build folder
+            const cleanCommand = `xcodebuild clean -workspace AppInstantClips.xcworkspace -scheme CDVAppClips`;
+            exec(cleanCommand, { cwd: iosPlatformPath }, (cleanError, cleanStdout, cleanStderr) => {
+                if (cleanError) {
+                    console.error(`Error cleaning CDVAppClips: ${cleanError}`);
+                    reject(cleanError);
                     return;
                 }
-                console.log(`Contents of exportOptions.plist:\n${data}`);
+                console.log('Successfully cleaned CDVAppClips.');
+                console.log(cleanStdout);
 
-                // Step 1: Archive the build
-                const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath ${iosPlatformPath}/build/AppClips.xcarchive`;
+                // Step 1: Archive the build with verbose output
+                const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath ${iosPlatformPath}/build/AppClips.xcarchive -verbose`;
 
                 exec(archiveCommand, { cwd: iosPlatformPath }, (archiveError, archiveStdout, archiveStderr) => {
                     if (archiveError) {
