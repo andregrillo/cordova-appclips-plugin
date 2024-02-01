@@ -55,7 +55,7 @@
 
 		<hook type="after_plugin_install" src="hooks/android/moveInstantApp.js"/>
 		<hook type="after_plugin_install" src="hooks/android/updateInstantAppUrl.js"/>
-		<hook type="after_compile" src="hooks/android/registerInstantAppSettingsGralde.js"/>
+		<hook type="after_compile" src="hooks/android/registerInstantAppSettingsGradle.js"/>
 
 		<!-- Variables strings -->
        	<config-file target="instant-app/src/main/res/values/strings.xml" parent="/*">
