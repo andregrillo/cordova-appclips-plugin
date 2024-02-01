@@ -346,8 +346,8 @@ module.exports = function (context) {
   });
 
 
-const projectPath = path.join(projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
-const appclipPath = path.join(projectRoot, 'platforms/ios/CDVAppClips');
+const projectPath = path.join(context.opts.projectRoot, 'platforms/ios', getProjectName() + '.xcodeproj', 'project.pbxproj');
+const appclipPath = path.join(context.opts.projectRoot, 'platforms/ios/CDVAppClips');
 let pbxprojContents = fs.readFileSync(projectPath, 'utf8');
 pbxprojContents = pbxprojContents.replace('AppDelegate2.m', 'AppDelegate.m');
 pbxprojContents = pbxprojContents.replace('AppDelegate2.h', 'AppDelegate.h');
