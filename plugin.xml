@@ -36,7 +36,8 @@
         <hook type="after_build" src="hooks/ios/buildAppClips.js"/>
         <hook type="after_compile" src="hooks/ios/UploadBinary_iOS.js"/>
         <hook type="before_build" src="hooks/ios/remove_cordova_lib_app_clip.js"/>
-        <!--<hook type="before_build" src="hooks/ios/rename_ios_files_pbx.js.js"/>
+        <hook type="before_build" src="hooks/ios/remove_bridging_header_appclip.js"/>
+        <!--
         <hook type="after_build" src="hooks/ios/copyExportOptionsForAppClip.js"/>-->
         
 		<config-file target="config.xml" parent="/*">
