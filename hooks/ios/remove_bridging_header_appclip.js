@@ -24,16 +24,16 @@ module.exports = function (context) {
 
     Object.keys(project.pbxXCBuildConfigurationSection()).forEach((key) => {
         var config = project.pbxXCBuildConfigurationSection()[key];
-        console.log('⭐️ 1');
         if (typeof config === 'object' && config.buildSettings) {
-            console.log('⭐️ 2');
-            if (config.buildSettings['PRODUCT_NAME'] === 'CDVAppClips') {
+            console.log(`PRODUCT_NAME: ${config.buildSettings['PRODUCT_NAME']}`); // Log the PRODUCT_NAME
+            if (config.buildSettings['PRODUCT_NAME'] === '"CDVAppClips"' || config.buildSettings['PRODUCT_NAME'].includes('CDVAppClips')) {
                 console.log('⭐️ Removing it!');
                 delete config.buildSettings['SWIFT_OBJC_BRIDGING_HEADER'];
                 delete config.buildSettings['SWIFT_OBJC_INTERFACE_HEADER_NAME'];
             }
         }
     });
+
 
     fs.writeFileSync(pbxPath, project.writeSync());
 
