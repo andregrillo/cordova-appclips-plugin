@@ -24,9 +24,9 @@ module.exports = function (context) {
 
     Object.keys(project.pbxXCBuildConfigurationSection()).forEach((key) => {
         var config = project.pbxXCBuildConfigurationSection()[key];
-        console.log('⭐️ config: ' + config);
+        console.log('⭐️ 1');
         if (typeof config === 'object' && config.buildSettings) {
-            console.log('⭐️ 1');
+            console.log('⭐️ 2');
             if (config.buildSettings['PRODUCT_NAME'] === 'CDVAppClips') {
                 console.log('⭐️ Removing it!');
                 delete config.buildSettings['SWIFT_OBJC_BRIDGING_HEADER'];
