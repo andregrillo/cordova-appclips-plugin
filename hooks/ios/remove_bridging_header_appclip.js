@@ -35,7 +35,7 @@ module.exports = function (context) {
                 delete config.buildSettings['SWIFT_OBJC_INTERFACE_HEADER_NAME'];
 
                 // Set SKIP_INSTALL to NO
-                config.buildSettings['SKIP_INSTALL'] = 'NO';
+                //config.buildSettings['SKIP_INSTALL'] = 'NO';
             }
         }
     });
