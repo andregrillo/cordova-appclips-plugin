@@ -69,7 +69,7 @@ module.exports = function(context) {
                     }
                 });
 
-
+                fs.writeFileSync(pbxPath, project.writeSync());
 
 
 
