@@ -36,14 +36,15 @@ module.exports = function(context) {
                 const archiveCommand = `xcodebuild -scheme CDVAppClips -workspace AppInstantClips.xcworkspace clean archive -archivePath build/Debug-iphoneos/AppClips.xcarchive -verbose -sdk iphoneos`;
                 //const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath build/Debug-iphoneos/AppClips.xcarchive -verbose`;
                 //const archiveCommand = `xcodebuild -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -destination generic/platform=iOS -archivePath AppClips.xcarchive archive -verbose`;
-                                       
+                console.log('ℹ️ Will run the archiveCommand')                   
                 exec(archiveCommand, { cwd: iosPlatformPath }, (archiveError, archiveStdout, archiveStderr) => {
+                    console.log('⭐️⭐️⭐️ Running archiveCommand ⭐️⭐️⭐️')
                     if (archiveError) {
-                        console.error(`Error archiving CDVAppClips: ${archiveError}`);
+                        console.error(`🚨 Error archiving CDVAppClips: ${archiveError}`);
                         reject(archiveError);
                         return;
                     }
-                    console.log('Successfully archived CDVAppClips.');
+                    console.log('✅ Successfully archived CDVAppClips.');
                     console.log(archiveStdout);
 
                     // Step 2: Export the archive to an IPA
@@ -52,20 +53,21 @@ module.exports = function(context) {
                     const exportCommand = `xcodebuild -exportArchive -archivePath build/Debug-iphoneos/AppClips.xcarchive -exportPath build/Debug-iphoneos -exportOptionsPlist exportOptionsAppClip.plist`;
 
                     exec(exportCommand, { cwd: iosPlatformPath }, (exportError, exportStdout, exportStderr) => {
+                        console.log('⭐️⭐️⭐️ Exporting IPA ⭐️⭐️⭐️')
                         if (exportError) {
-                            console.error(`Error exporting CDVAppClips IPA: ${exportError}`);
+                            console.error(`🚨 Error exporting CDVAppClips IPA: ${exportError}`);
                             reject(exportError);
                             return;
                         }
-                        console.log('Successfully exported CDVAppClips IPA.');
+                        console.log('✅ Successfully exported CDVAppClips IPA.');
                         console.log(exportStdout);
 
                         // Optional: List the contents of the directory where the IPA is expected to be
                         const ipaDirectoryPath = path.join(iosPlatformPath, 'build/Debug-iphoneos');
-                        console.log(`Listing contents of the IPA directory: ${ipaDirectoryPath}`);
+                        console.log(`⭐️ Listing contents of the IPA directory: ${ipaDirectoryPath}`);
                         exec(`ls -l ${ipaDirectoryPath}`, (lsError, lsStdout, lsStderr) => {
                             if (lsError) {
-                                console.error(`Error listing IPA directory: ${lsError}`);
+                                console.error(`🚨 Error listing IPA directory: ${lsError}`);
                                 reject(lsError);
                                 return;
                             }
