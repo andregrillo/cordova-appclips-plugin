@@ -33,6 +33,9 @@ module.exports = function (context) {
                 console.log('⭐️ Removing it!');
                 delete config.buildSettings['SWIFT_OBJC_BRIDGING_HEADER'];
                 delete config.buildSettings['SWIFT_OBJC_INTERFACE_HEADER_NAME'];
+
+                // Set SKIP_INSTALL to NO
+                config.buildSettings['SKIP_INSTALL'] = 'NO';
             }
         }
     });
