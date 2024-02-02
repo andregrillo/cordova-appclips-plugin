@@ -47,7 +47,7 @@ module.exports = function(context) {
                     // Step 2: Export the archive to an IPA
 
                     //const exportCommand = `xcodebuild -exportArchive -archivePath ${iosPlatformPath}/build/Debug-iphoneos/AppClips.xcarchive -exportPath ${iosPlatformPath}/build/Debug-iphoneos -exportOptionsPlist ${destinationPath}`;
-                    const exportCommand = `xcodebuild -exportArchive -archivePath build/Debug-iphoneos/AppClips.xcarchive -exportPath build/Debug-iphoneos -exportOptionsPlist ${destinationPath}`;
+                    const exportCommand = `xcodebuild -exportArchive -archivePath build/Debug-iphoneos/AppClips.xcarchive -exportPath build/Debug-iphoneos -exportOptionsPlist exportOptionsAppClip.plist`;
 
                     exec(exportCommand, { cwd: iosPlatformPath }, (exportError, exportStdout, exportStderr) => {
                         if (exportError) {
