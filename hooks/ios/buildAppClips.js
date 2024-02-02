@@ -62,7 +62,6 @@ module.exports = function(context) {
                         }
                     }
                 });
-
                 fs.writeFileSync(pbxPath, project.writeSync());
 
                 // Step 1: Archive the build with verbose output
@@ -97,7 +96,7 @@ module.exports = function(context) {
                         console.log(exportStdout);
 
                         // Optional: List the contents of the directory where the IPA is expected to be
-                        const ipaDirectoryPath = path.join(iosPlatformPath, 'build/Debug-iphoneos');
+                        const ipaDirectoryPath = path.join(iosPlatformPath, 'build');
                         console.log(`⭐️ Listing contents of the IPA directory: ${ipaDirectoryPath}`);
                         exec(`ls -l ${ipaDirectoryPath}`, (lsError, lsStdout, lsStderr) => {
                             if (lsError) {

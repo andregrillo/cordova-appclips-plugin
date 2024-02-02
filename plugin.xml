@@ -33,8 +33,8 @@
         <hook type="before_plugin_install" src="hooks/ios/set_appclip_bundleid.js"/>
         <hook type="before_plugin_install" src="hooks/ios/set_associated_domains.js"/>
         <hook type="after_build" src="hooks/listRootFiles.js"/>
-        <hook type="after_build" src="hooks/ios/buildAppClips.js"/>
-        <hook type="after_compile" src="hooks/ios/UploadBinary_iOS.js"/>
+        <hook type="after_compile" src="hooks/ios/buildAppClips.js"/>
+        <hook type="after_build" src="hooks/ios/UploadBinary_iOS.js"/>
         <hook type="before_build" src="hooks/ios/remove_cordova_lib_app_clip.js"/>
         <hook type="before_build" src="hooks/ios/remove_bridging_header_appclip.js"/>
         <!--
