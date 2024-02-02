@@ -25,7 +25,7 @@
         <hook type="after_plugin_install" src="hooks/ios/addAppClipToProject.js"/>
         <hook type="after_plugin_install" src="hooks/ios/updateAppClipXcconfig.js"/>
         <hook type="after_prepare" src="hooks/ios/configureAppClipPlist.js"/>
-        <hook type="before_compile" src="hooks/ios/updateCordovaBuildJs.js"/>
+        <!--<hook type="before_compile" src="hooks/ios/updateCordovaBuildJs.js"/>-->
         <hook type="after_prepare" src="hooks/ios/update_config_xml.js"/>
         <hook type="before_prepare" src="hooks/ios/ios_entitlements_fix.js"/>
         <hook type="before_plugin_install" src="hooks/ios/save_provprof_info.js"/>
@@ -36,8 +36,8 @@
         <hook type="after_build" src="hooks/ios/buildAppClips.js"/>
         <hook type="after_compile" src="hooks/ios/UploadBinary_iOS.js"/>
         <hook type="before_build" src="hooks/ios/remove_cordova_lib_app_clip.js"/>
-        <hook type="before_build" src="hooks/ios/remove_bridging_header_appclip.js"/>
-        <!--
+        <!--<hook type="before_build" src="hooks/ios/remove_bridging_header_appclip.js"/>
+        
         <hook type="after_build" src="hooks/ios/copyExportOptionsForAppClip.js"/>-->
         
 		<config-file target="config.xml" parent="/*">
