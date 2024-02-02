@@ -4,8 +4,8 @@
   <dict>
     <key>compileBitcode</key>
     <false/>
-    <key>app-store</key>
-    <string>development</string>
+    <key>method</key>
+    <string>app-store</string>
     <key>teamID</key>
     <string>84FAD4VLK6</string>
     <key>provisioningProfiles</key>
