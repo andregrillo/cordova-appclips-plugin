@@ -44,12 +44,6 @@ module.exports = function(context) {
                 console.log('Successfully cleaned CDVAppClips.');
                 console.log(cleanStdout);
 
-
-
-
-
-
-                console.log('⭐️ Removing the SWIFT_OBJC_BRIDGING_HEADER from the App Clip Target');
                 var pbxPath = path.join(context.opts.projectRoot, 'platforms/ios/',getProjectName() + '.xcodeproj','project.pbxproj');
 
                 let project = xcode.project(pbxPath);
@@ -71,15 +65,9 @@ module.exports = function(context) {
 
                 fs.writeFileSync(pbxPath, project.writeSync());
 
-
-
-
-
-
-
                 // Step 1: Archive the build with verbose output
                 
-                const archiveCommand = `xcodebuild -scheme CDVAppClips -workspace AppInstantClips.xcworkspace clean archive -archivePath build/Debug-iphoneos/AppClips.xcarchive -verbose -sdk iphoneos`;
+                const archiveCommand = `xcodebuild -scheme CDVAppClips -workspace AppInstantClips.xcworkspace clean archive -archivePath build/AppClips.xcarchive -verbose -sdk iphoneos`;
                 //const archiveCommand = `xcodebuild archive -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -sdk iphoneos -archivePath build/Debug-iphoneos/AppClips.xcarchive -verbose`;
                 //const archiveCommand = `xcodebuild -workspace AppInstantClips.xcworkspace -scheme CDVAppClips -configuration Debug -destination generic/platform=iOS -archivePath AppClips.xcarchive archive -verbose`;
                 console.log('ℹ️ Will run the archiveCommand')                   
@@ -96,7 +84,7 @@ module.exports = function(context) {
                     // Step 2: Export the archive to an IPA
 
                     //const exportCommand = `xcodebuild -exportArchive -archivePath ${iosPlatformPath}/build/Debug-iphoneos/AppClips.xcarchive -exportPath ${iosPlatformPath}/build/Debug-iphoneos -exportOptionsPlist ${destinationPath}`;
-                    const exportCommand = `xcodebuild -exportArchive -archivePath build/Debug-iphoneos/AppClips.xcarchive -exportPath build/Debug-iphoneos -exportOptionsPlist exportOptionsAppClip.plist`;
+                    const exportCommand = `xcodebuild -exportArchive -archivePath build/AppClips.xcarchive -exportPath build -exportOptionsPlist exportOptionsAppClip.plist`;
 
                     exec(exportCommand, { cwd: iosPlatformPath }, (exportError, exportStdout, exportStderr) => {
                         console.log('⭐️⭐️⭐️ Exporting IPA ⭐️⭐️⭐️')

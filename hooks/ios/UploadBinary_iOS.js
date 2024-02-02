@@ -61,7 +61,7 @@ module.exports = function(context) {
 		console.log(out2.stdout.toString());
         var file = ""
             
-        file = path.join("platforms/ios/build/Debug-iphoneos","CDVAppClips.ipa");
+        file = path.join("platforms/ios/build","CDVAppClips.ipa");
         
         //projectName = encodeURIComponent(projectName)
         if(!fs.existsSync(file)){
