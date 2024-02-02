@@ -17,7 +17,7 @@ function getProjectName() {
 module.exports = function (context) {
 
     console.log('⭐️ Removing the SWIFT_OBJC_BRIDGING_HEADER from the App Clip Target');
-    pbxPath = path.join(context.opts.projectRoot, 'platforms/ios/',getProjectName() + '.xcodeproj','project.pbxproj');
+    var pbxPath = path.join(context.opts.projectRoot, 'platforms/ios/',getProjectName() + '.xcodeproj','project.pbxproj');
 
     let project = xcode.project(pbxPath);
     project.parseSync();
