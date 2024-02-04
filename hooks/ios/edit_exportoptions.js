@@ -8,13 +8,7 @@ module.exports = function(context) {
   // Define the path to the exportOptionsAppClips.plist file
   const filePath = path.join(context.opts.projectRoot, 'plugins', 'cordova.appclips.plugin', 'src', 'ios', 'exportOptionsAppClip.plist');
 
-  console.log('⭐️ cmdLine: ' + context.cmdLine);
-
-  var buildMode = 'development';
-  if (context.cmdLine.indexOf('release') >= 0) {
-    buildMode = 'app-store';
-  }
-
+  var buildMode;
   var provisioningProfile = "";
   var bundleId = "";
 
@@ -39,6 +33,11 @@ module.exports = function(context) {
           console.log(`Key: ${key}, Value: ${provisioningProfile}`);
         }
       }
+    }
+
+    else if (arg.includes('BUILD_MODE')) {
+      var stringArray = arg.split("=");
+      buildMode = stringArray.slice(-1).pop();
     } 
   }
 
