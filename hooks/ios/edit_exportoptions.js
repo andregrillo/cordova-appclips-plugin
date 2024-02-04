@@ -9,8 +9,8 @@ module.exports = function(context) {
   const filePath = path.join(context.opts.projectRoot, 'plugins', 'cordova.appclips.plugin', 'src', 'ios', 'exportOptionsAppClip.plist');
 
   var buildMode;
-  var provisioningProfile = "";
-  var bundleId = "";
+  var provisioningProfile;
+  var bundleId;
 
   const args = context.cmdLine.split(' ');
 
@@ -20,9 +20,10 @@ module.exports = function(context) {
       bundleId = stringArray.slice(-1).pop();
     } 
     
-    else if (arg.includes('PROVISIONING_PROFILES')){
-      var provisioningProfileString = arg.split("=");
+    else if (arg.includes('PROVISIONING_PROFILES=')){
+    const provisioningProfileString = arg.split('PROVISIONING_PROFILES=')[1];
 
+    try {
       // Parse the JSON string into a JavaScript object
       const parsedObject = JSON.parse(provisioningProfileString);
 
@@ -33,7 +34,10 @@ module.exports = function(context) {
           console.log(`Key: ${key}, Value: ${provisioningProfile}`);
         }
       }
+    } catch (e) {
+      console.error(`Error parsing provisioning profile JSON: ${e}`);
     }
+  }
 
     else if (arg.includes('BUILD_MODE')) {
       var stringArray = arg.split("=");
