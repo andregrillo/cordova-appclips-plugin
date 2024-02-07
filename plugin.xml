@@ -11,7 +11,6 @@
 
 	<!-- URL to open in WebView Instant App -->
 	 <preference name="APP_INSTANT_CLIPS_URL"/>
-	 <preference name="CREDENTIALS"/>
 	 <preference name="WEBSERVICEURL"/>
 
 	<platform name="ios">
